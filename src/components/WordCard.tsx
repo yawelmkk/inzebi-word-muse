@@ -6,11 +6,11 @@ import { useState } from "react";
 interface WordCardProps {
   word: string;
   translation: string;
-  type?: string;
+  partOfSpeech?: string;
   onClick?: () => void;
 }
 
-export const WordCard = ({ word, translation, type, onClick }: WordCardProps) => {
+export const WordCard = ({ word, translation, partOfSpeech, onClick }: WordCardProps) => {
   const [isFavorite, setIsFavorite] = useState(false);
 
   return (
@@ -21,9 +21,9 @@ export const WordCard = ({ word, translation, type, onClick }: WordCardProps) =>
       <div className="flex justify-between items-start">
         <div className="flex-1">
           <h3 className="text-2xl font-bold text-foreground mb-1">{word}</h3>
-          {type && (
+          {partOfSpeech && (
             <span className="text-xs bg-secondary px-2 py-1 rounded-full text-secondary-foreground">
-              {type}
+              {partOfSpeech}
             </span>
           )}
           <p className="text-muted-foreground mt-2">{translation}</p>

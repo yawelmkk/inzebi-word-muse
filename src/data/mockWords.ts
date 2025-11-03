@@ -1,108 +1,104 @@
 export interface Word {
   id: string;
-  word: string;
-  translation: string;
-  type: string;
-  definition: string;
-  examples: string[];
-  pronunciation?: string;
+  nzebi_word: string;
+  french_word: string;
+  part_of_speech: string;
+  example_nzebi: string;
+  example_french: string;
+  pronunciation_url: string;
+  is_verb: boolean;
+  infinitif?: string;
+  plural_form?: string;
+  synonyms?: string;
+  scientific_name?: string;
+  imperative?: string;
 }
 
 export const mockWords: Word[] = [
   {
     id: "1",
-    word: "Mbolo",
-    translation: "Bonjour",
-    type: "salutation",
-    definition: "Salutation utilisée pour souhaiter la bienvenue ou saluer quelqu'un",
-    examples: [
-      "Mbolo, comment vas-tu ?",
-      "Je dis mbolo à mes amis chaque matin"
-    ],
-    pronunciation: "m-bo-lo"
+    nzebi_word: "Mbolo",
+    french_word: "Bonjour",
+    part_of_speech: "salutation",
+    example_nzebi: "Mbolo, comment vas-tu ?",
+    example_french: "Bonjour, comment vas-tu ?",
+    pronunciation_url: "",
+    is_verb: false,
+    synonyms: "Salut"
   },
   {
     id: "2",
-    word: "Nzambi",
-    translation: "Dieu",
-    type: "nom",
-    definition: "Être suprême, créateur de toutes choses dans la cosmologie Inzébi",
-    examples: [
-      "Nzambi est grand",
-      "Nous prions Nzambi"
-    ],
-    pronunciation: "n-zam-bi"
+    nzebi_word: "Nzambi",
+    french_word: "Dieu",
+    part_of_speech: "nom",
+    example_nzebi: "Nzambi est grand",
+    example_french: "Dieu est grand",
+    pronunciation_url: "",
+    is_verb: false
   },
   {
     id: "3",
-    word: "Mwana",
-    translation: "Enfant",
-    type: "nom",
-    definition: "Jeune personne, garçon ou fille",
-    examples: [
-      "Le mwana joue dehors",
-      "C'est mon mwana"
-    ],
-    pronunciation: "mwa-na"
+    nzebi_word: "Mwana",
+    french_word: "Enfant",
+    part_of_speech: "nom",
+    example_nzebi: "Le mwana joue dehors",
+    example_french: "L'enfant joue dehors",
+    pronunciation_url: "",
+    is_verb: false,
+    plural_form: "Bana"
   },
   {
     id: "4",
-    word: "Ndako",
-    translation: "Maison",
-    type: "nom",
-    definition: "Habitation, lieu de résidence",
-    examples: [
-      "Je rentre à la ndako",
-      "Notre ndako est grande"
-    ],
-    pronunciation: "n-da-ko"
+    nzebi_word: "Ndako",
+    french_word: "Maison",
+    part_of_speech: "nom",
+    example_nzebi: "Je rentre à la ndako",
+    example_french: "Je rentre à la maison",
+    pronunciation_url: "",
+    is_verb: false,
+    plural_form: "Mindako"
   },
   {
     id: "5",
-    word: "Lola",
-    translation: "Parler",
-    type: "verbe",
-    definition: "Communiquer par la parole, s'exprimer",
-    examples: [
-      "Il sait lola en Inzébi",
-      "Nous allons lola ensemble"
-    ],
-    pronunciation: "lo-la"
+    nzebi_word: "Lola",
+    french_word: "Parler",
+    part_of_speech: "verbe",
+    example_nzebi: "Il sait lola en Inzébi",
+    example_french: "Il sait parler en Inzébi",
+    pronunciation_url: "",
+    is_verb: true,
+    infinitif: "Lola",
+    imperative: "Lola!"
   },
   {
     id: "6",
-    word: "Dibuka",
-    translation: "Nourriture",
-    type: "nom",
-    definition: "Aliment, ce qui se mange",
-    examples: [
-      "La dibuka est prête",
-      "J'aime cette dibuka"
-    ],
-    pronunciation: "di-bu-ka"
+    nzebi_word: "Dibuka",
+    french_word: "Nourriture",
+    part_of_speech: "nom",
+    example_nzebi: "La dibuka est prête",
+    example_french: "La nourriture est prête",
+    pronunciation_url: "",
+    is_verb: false,
+    synonyms: "Aliment"
   },
   {
     id: "7",
-    word: "Maza",
-    translation: "Eau",
-    type: "nom",
-    definition: "Liquide transparent et inodore, essentiel à la vie",
-    examples: [
-      "Je bois du maza",
-      "Le maza est frais"
-    ],
-    pronunciation: "ma-za"
+    nzebi_word: "Maza",
+    french_word: "Eau",
+    part_of_speech: "nom",
+    example_nzebi: "Je bois du maza",
+    example_french: "Je bois de l'eau",
+    pronunciation_url: "",
+    is_verb: false
   },
   {
     id: "8",
-    word: "Ngonda",
-    translation: "Lune",
-    type: "nom",
-    definition: "Satellite naturel de la Terre, visible la nuit",
-    examples: [
-      "La ngonda est belle ce soir",
-      "Regarder la ngonda"
-    ],
-    pronunciation: "n-gon-da"
+    nzebi_word: "Ngonda",
+    french_word: "Lune",
+    part_of_speech: "nom",
+    example_nzebi: "La ngonda est belle ce soir",
+    example_french: "La lune est belle ce soir",
+    pronunciation_url: "",
+    is_verb: false
   }
 ];

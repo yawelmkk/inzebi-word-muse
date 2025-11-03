@@ -11,8 +11,8 @@ const Index = () => {
 
   const filteredWords = mockWords.filter(
     (word) =>
-      word.word.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      word.translation.toLowerCase().includes(searchQuery.toLowerCase())
+      word.nzebi_word.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      word.french_word.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
   const featuredWords = mockWords.slice(0, 3);
@@ -55,13 +55,13 @@ const Index = () => {
             </div>
             <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
               {featuredWords.map((word) => (
-                <WordCard
-                  key={word.id}
-                  word={word.word}
-                  translation={word.translation}
-                  type={word.type}
-                  onClick={() => navigate(`/word/${word.id}`)}
-                />
+              <WordCard
+                key={word.id}
+                word={word.nzebi_word}
+                translation={word.french_word}
+                partOfSpeech={word.part_of_speech}
+                onClick={() => navigate(`/word/${word.id}`)}
+              />
               ))}
             </div>
           </div>
@@ -76,13 +76,13 @@ const Index = () => {
             <div className="space-y-4">
               {filteredWords.length > 0 ? (
                 filteredWords.map((word) => (
-                  <WordCard
-                    key={word.id}
-                    word={word.word}
-                    translation={word.translation}
-                    type={word.type}
-                    onClick={() => navigate(`/word/${word.id}`)}
-                  />
+              <WordCard
+                key={word.id}
+                word={word.nzebi_word}
+                translation={word.french_word}
+                partOfSpeech={word.part_of_speech}
+                onClick={() => navigate(`/word/${word.id}`)}
+              />
                 ))
               ) : (
                 <div className="text-center py-12">
@@ -103,13 +103,13 @@ const Index = () => {
             </h2>
             <div className="space-y-4">
               {mockWords.map((word) => (
-                <WordCard
-                  key={word.id}
-                  word={word.word}
-                  translation={word.translation}
-                  type={word.type}
-                  onClick={() => navigate(`/word/${word.id}`)}
-                />
+              <WordCard
+                key={word.id}
+                word={word.nzebi_word}
+                translation={word.french_word}
+                partOfSpeech={word.part_of_speech}
+                onClick={() => navigate(`/word/${word.id}`)}
+              />
               ))}
             </div>
           </div>
