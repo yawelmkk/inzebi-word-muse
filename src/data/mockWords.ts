@@ -17,8 +17,8 @@ export const mockWords: Word[] = [
   {
     id: "1",
     nzebi_word: "Mbolo",
-    french_word: "Bonjour",
-    part_of_speech: "salutation",
+    french_word: "yawel",
+    part_of_speech: "grand hommes",
     example_nzebi: "Mbolo, comment vas-tu ?",
     example_french: "Bonjour, comment vas-tu ?",
     pronunciation_url: "",
