@@ -20,30 +20,29 @@ const Index = () => {
   return (
     <div className="min-h-screen bg-background pb-20">
       {/* Hero Header */}
-      <div className="gradient-warm p-8 pb-12 shadow-soft">
-        <div className="max-w-4xl mx-auto space-y-6">
+      <div className="gradient-warm p-4 pb-6 shadow-soft">
+        <div className="max-w-4xl mx-auto">
           <div className="flex items-center justify-center gap-3 mb-4">
             <BookOpen className="h-8 w-8 text-primary-foreground" />
             <h1 className="text-3xl md:text-4xl font-bold text-primary-foreground text-center">
               Dictionnaire Inzébi
             </h1>
           </div>
-          <p className="text-primary-foreground/90 text-center text-lg">
-            Découvrez la richesse de la langue Inzébi
-          </p>
-          
-          {/* Search Bar */}
-          <div className="mt-6">
-            <SearchBar
-              value={searchQuery}
-              onChange={setSearchQuery}
-              placeholder="Rechercher un mot en Inzébi ou en Français..."
-            />
-          </div>
         </div>
       </div>
 
-      <div className="max-w-4xl mx-auto px-4 -mt-6">
+      {/* Sticky Search Bar */}
+      <div className="sticky top-0 z-10 bg-background shadow-md py-4">
+        <div className="max-w-4xl mx-auto px-4">
+          <SearchBar
+            value={searchQuery}
+            onChange={setSearchQuery}
+            placeholder="Rechercher un mot en Inzébi ou en Français..."
+          />
+        </div>
+      </div>
+
+      <div className="max-w-4xl mx-auto px-4 mt-6">
         {/* Featured Words */}
         {!searchQuery && (
           <div className="mb-8 animate-fade-in">
