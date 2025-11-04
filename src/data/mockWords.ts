@@ -6,12 +6,11 @@ export interface Word {
   example_nzebi: string;
   example_french: string;
   pronunciation_url: string;
-  is_verb: boolean;
-  infinitif?: string;
-  plural_form?: string;
-  synonyms?: string;
-  scientific_name?: string;
-  imperative?: string;
+  is_verb: string;
+  plural_form: string;
+  synonyms: string;
+  scientific_name: string;
+  imperative: string;
 }
 
 export const mockWords: Word[] = [
@@ -23,8 +22,11 @@ export const mockWords: Word[] = [
     example_nzebi: "Mbolo, comment vas-tu ?",
     example_french: "Bonjour, comment vas-tu ?",
     pronunciation_url: "",
-    is_verb: false,
-    synonyms: "Salut"
+    is_verb: "false",
+    plural_form: "",
+    synonyms: "Salut",
+    scientific_name: "",
+    imperative: ""
   },
   {
     id: "2",
@@ -34,7 +36,11 @@ export const mockWords: Word[] = [
     example_nzebi: "Nzambi est grand",
     example_french: "Dieu est grand",
     pronunciation_url: "",
-    is_verb: false
+    is_verb: "false",
+    plural_form: "",
+    synonyms: "",
+    scientific_name: "",
+    imperative: ""
   },
   {
     id: "3",
@@ -44,8 +50,11 @@ export const mockWords: Word[] = [
     example_nzebi: "Le mwana joue dehors",
     example_french: "L'enfant joue dehors",
     pronunciation_url: "",
-    is_verb: false,
-    plural_form: "Bana"
+    is_verb: "false",
+    plural_form: "Bana",
+    synonyms: "",
+    scientific_name: "",
+    imperative: ""
   },
   {
     id: "4",
@@ -55,8 +64,11 @@ export const mockWords: Word[] = [
     example_nzebi: "Je rentre à la ndako",
     example_french: "Je rentre à la maison",
     pronunciation_url: "",
-    is_verb: false,
-    plural_form: "Mindako"
+    is_verb: "false",
+    plural_form: "Mindako",
+    synonyms: "",
+    scientific_name: "",
+    imperative: ""
   },
   {
     id: "5",
@@ -66,8 +78,10 @@ export const mockWords: Word[] = [
     example_nzebi: "Il sait lola en Inzébi",
     example_french: "Il sait parler en Inzébi",
     pronunciation_url: "",
-    is_verb: true,
-    infinitif: "Lola",
+    is_verb: "true",
+    plural_form: "",
+    synonyms: "",
+    scientific_name: "",
     imperative: "Lola!"
   },
   {
@@ -78,8 +92,11 @@ export const mockWords: Word[] = [
     example_nzebi: "La dibuka est prête",
     example_french: "La nourriture est prête",
     pronunciation_url: "",
-    is_verb: false,
-    synonyms: "Aliment"
+    is_verb: "false",
+    plural_form: "",
+    synonyms: "Aliment",
+    scientific_name: "",
+    imperative: ""
   },
   {
     id: "7",
@@ -89,7 +106,11 @@ export const mockWords: Word[] = [
     example_nzebi: "Je bois du maza",
     example_french: "Je bois de l'eau",
     pronunciation_url: "",
-    is_verb: false
+    is_verb: "false",
+    plural_form: "",
+    synonyms: "",
+    scientific_name: "",
+    imperative: ""
   },
   {
     id: "8",
@@ -99,6 +120,10 @@ export const mockWords: Word[] = [
     example_nzebi: "La ngonda est belle ce soir",
     example_french: "La lune est belle ce soir",
     pronunciation_url: "",
-    is_verb: false
+    is_verb: "false",
+    plural_form: "",
+    synonyms: "",
+    scientific_name: "",
+    imperative: ""
   }
 ];

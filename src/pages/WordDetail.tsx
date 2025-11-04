@@ -74,7 +74,7 @@ const WordDetail = () => {
               <span className="bg-secondary px-3 py-1 rounded-full text-sm text-secondary-foreground">
                 {word.part_of_speech}
               </span>
-              {word.is_verb && (
+              {word.is_verb === "true" && (
                 <span className="bg-primary/10 px-3 py-1 rounded-full text-sm text-primary">
                   verbe
                 </span>
@@ -109,18 +109,12 @@ const WordDetail = () => {
         </Card>
 
         {/* Additional Info */}
-        {(word.plural_form || word.synonyms || word.infinitif || word.imperative || word.scientific_name) && (
+        {(word.plural_form || word.synonyms || word.imperative || word.scientific_name) && (
           <Card className="p-6 shadow-soft">
             <h3 className="text-sm font-semibold text-muted-foreground mb-3">
               INFORMATIONS COMPLÉMENTAIRES
             </h3>
             <div className="space-y-2">
-              {word.infinitif && (
-                <div>
-                  <span className="font-semibold text-foreground">Infinitif: </span>
-                  <span className="text-foreground">{word.infinitif}</span>
-                </div>
-              )}
               {word.imperative && (
                 <div>
                   <span className="font-semibold text-foreground">Impératif: </span>
