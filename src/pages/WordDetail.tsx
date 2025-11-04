@@ -71,9 +71,11 @@ const WordDetail = () => {
               <p className="text-muted-foreground italic">Prononciation disponible</p>
             )}
             <div className="flex items-center gap-2">
-              <span className="bg-secondary px-3 py-1 rounded-full text-sm text-secondary-foreground">
-                {word.part_of_speech}
-              </span>
+              {word.part_of_speech && (
+                <span className="bg-secondary px-3 py-1 rounded-full text-sm text-secondary-foreground">
+                  {word.part_of_speech}
+                </span>
+              )}
               {word.is_verb === "true" && (
                 <span className="bg-primary/10 px-3 py-1 rounded-full text-sm text-primary">
                   verbe
@@ -84,56 +86,64 @@ const WordDetail = () => {
         </Card>
 
         {/* Translation */}
-        <Card className="p-6 shadow-soft">
-          <h3 className="text-sm font-semibold text-muted-foreground mb-2">
-            TRADUCTION
-          </h3>
-          <p className="text-2xl font-semibold text-foreground">{word.french_word}</p>
-        </Card>
+        {word.french_word && (
+          <Card className="p-6 shadow-soft">
+            <h3 className="text-sm font-semibold text-muted-foreground mb-2">
+              TRADUCTION
+            </h3>
+            <p className="text-2xl font-semibold text-foreground">{word.french_word}</p>
+          </Card>
+        )}
 
         {/* Examples */}
-        <Card className="p-6 shadow-soft">
-          <h3 className="text-sm font-semibold text-muted-foreground mb-3">
-            EXEMPLES
-          </h3>
-          <div className="space-y-4">
-            <div className="p-3 bg-secondary/50 rounded-lg border-l-4 border-primary">
-              <p className="text-foreground font-semibold mb-1">Inzébi:</p>
-              <p className="text-foreground italic">"{word.example_nzebi}"</p>
+        {(word.example_nzebi || word.example_french) && (
+          <Card className="p-6 shadow-soft">
+            <h3 className="text-sm font-semibold text-muted-foreground mb-3">
+              EXEMPLES
+            </h3>
+            <div className="space-y-4">
+              {word.example_nzebi && (
+                <div className="p-3 bg-secondary/50 rounded-lg border-l-4 border-primary">
+                  <p className="text-foreground font-semibold mb-1">Inzébi:</p>
+                  <p className="text-foreground italic">&quot;{word.example_nzebi}&quot;</p>
+                </div>
+              )}
+              {word.example_french && (
+                <div className="p-3 bg-secondary/50 rounded-lg border-l-4 border-accent">
+                  <p className="text-foreground font-semibold mb-1">Français:</p>
+                  <p className="text-foreground italic">&quot;{word.example_french}&quot;</p>
+                </div>
+              )}
             </div>
-            <div className="p-3 bg-secondary/50 rounded-lg border-l-4 border-accent">
-              <p className="text-foreground font-semibold mb-1">Français:</p>
-              <p className="text-foreground italic">"{word.example_french}"</p>
-            </div>
-          </div>
-        </Card>
+          </Card>
+        )}
 
         {/* Additional Info */}
-        {(word.plural_form || word.synonyms || word.imperative || word.scientific_name) && (
+        {(word.plural_form?.trim() || word.synonyms?.trim() || word.imperative?.trim() || word.scientific_name?.trim()) && (
           <Card className="p-6 shadow-soft">
             <h3 className="text-sm font-semibold text-muted-foreground mb-3">
               INFORMATIONS COMPLÉMENTAIRES
             </h3>
             <div className="space-y-2">
-              {word.imperative && (
+              {word.imperative?.trim() && (
                 <div>
                   <span className="font-semibold text-foreground">Impératif: </span>
                   <span className="text-foreground">{word.imperative}</span>
                 </div>
               )}
-              {word.plural_form && (
+              {word.plural_form?.trim() && (
                 <div>
                   <span className="font-semibold text-foreground">Pluriel: </span>
                   <span className="text-foreground">{word.plural_form}</span>
                 </div>
               )}
-              {word.synonyms && (
+              {word.synonyms?.trim() && (
                 <div>
                   <span className="font-semibold text-foreground">Synonymes: </span>
                   <span className="text-foreground">{word.synonyms}</span>
                 </div>
               )}
-              {word.scientific_name && (
+              {word.scientific_name?.trim() && (
                 <div>
                   <span className="font-semibold text-foreground">Nom scientifique: </span>
                   <span className="text-foreground italic">{word.scientific_name}</span>
