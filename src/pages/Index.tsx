@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useState, useEffect, useRef } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
 import { SearchBar } from "@/components/SearchBar";
 import { WordCard } from "@/components/WordCard";
 import { mockWords } from "@/data/mockWords";
@@ -8,6 +8,21 @@ import { Sparkles, BookOpen } from "lucide-react";
 const Index = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const navigate = useNavigate();
+  const location = useLocation();
+  const scrollPositionRef = useRef(0);
+
+  useEffect(() => {
+    // Restaurer la position de scroll si on revient de la page de détail
+    if (location.state?.scrollPosition !== undefined) {
+      window.scrollTo(0, location.state.scrollPosition);
+    }
+  }, [location.state]);
+
+  const handleWordClick = (wordId: string) => {
+    // Sauvegarder la position actuelle avant de naviguer
+    scrollPositionRef.current = window.scrollY;
+    navigate(`/word/${wordId}`, { state: { scrollPosition: scrollPositionRef.current } });
+  };
 
   const filteredWords = mockWords.filter(
     (word) =>
@@ -59,7 +74,7 @@ const Index = () => {
                 word={word.nzebi_word}
                 translation={word.french_word}
                 partOfSpeech={word.part_of_speech}
-                onClick={() => navigate(`/word/${word.id}`)}
+                onClick={() => handleWordClick(word.id)}
               />
               ))}
             </div>
@@ -80,7 +95,7 @@ const Index = () => {
                 word={word.nzebi_word}
                 translation={word.french_word}
                 partOfSpeech={word.part_of_speech}
-                onClick={() => navigate(`/word/${word.id}`)}
+                onClick={() => handleWordClick(word.id)}
               />
                 ))
               ) : (
@@ -107,7 +122,7 @@ const Index = () => {
                 word={word.nzebi_word}
                 translation={word.french_word}
                 partOfSpeech={word.part_of_speech}
-                onClick={() => navigate(`/word/${word.id}`)}
+                onClick={() => handleWordClick(word.id)}
               />
               ))}
             </div>

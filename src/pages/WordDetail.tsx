@@ -1,4 +1,4 @@
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, useLocation } from "react-router-dom";
 import { ArrowLeft, Heart, Volume2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -8,7 +8,12 @@ import { useState } from "react";
 const WordDetail = () => {
   const { id } = useParams();
   const navigate = useNavigate();
+  const location = useLocation();
   const [isFavorite, setIsFavorite] = useState(false);
+
+  const handleBack = () => {
+    navigate("/", { state: { scrollPosition: location.state?.scrollPosition || 0 } });
+  };
   
   const word = mockWords.find((w) => w.id === id);
 
@@ -33,7 +38,7 @@ const WordDetail = () => {
           <Button
             variant="ghost"
             size="icon"
-            onClick={() => navigate("/")}
+            onClick={handleBack}
             className="text-primary-foreground hover:bg-white/20"
           >
             <ArrowLeft className="h-6 w-6" />
