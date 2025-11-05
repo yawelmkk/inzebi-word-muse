@@ -12,9 +12,14 @@ const Index = () => {
   const scrollPositionRef = useRef(0);
 
   useEffect(() => {
-    // Restaurer la position de scroll si on revient de la page de détail
+    // Restaurer la position de scroll instantanément si on revient de la page de détail
     if (location.state?.scrollPosition !== undefined) {
-      window.scrollTo(0, location.state.scrollPosition);
+      requestAnimationFrame(() => {
+        window.scrollTo({
+          top: location.state.scrollPosition,
+          behavior: 'instant'
+        });
+      });
     }
   }, [location.state]);
 
