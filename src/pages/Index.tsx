@@ -35,7 +35,30 @@ const Index = () => {
       word.french_word.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
-  const featuredWords = mockWords.slice(0, 3);
+  // Sélectionner 3 mots différents chaque jour
+  const getDailyFeaturedWords = () => {
+    const today = new Date();
+    const dateString = `${today.getFullYear()}-${today.getMonth()}-${today.getDate()}`;
+    
+    // Créer un seed basé sur la date
+    let seed = 0;
+    for (let i = 0; i < dateString.length; i++) {
+      seed = (seed * 31 + dateString.charCodeAt(i)) % mockWords.length;
+    }
+    
+    // Sélectionner 3 mots différents basés sur le seed
+    const indices = new Set<number>();
+    let currentSeed = seed;
+    
+    while (indices.size < 3 && indices.size < mockWords.length) {
+      indices.add(currentSeed % mockWords.length);
+      currentSeed = (currentSeed * 7 + 13) % mockWords.length;
+    }
+    
+    return Array.from(indices).map(index => mockWords[index]);
+  };
+
+  const featuredWords = getDailyFeaturedWords();
 
   return (
     <div className="min-h-screen bg-background pb-20">
