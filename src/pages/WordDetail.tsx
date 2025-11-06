@@ -3,7 +3,7 @@ import { ArrowLeft, Heart, Volume2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { mockWords } from "@/data/mockWords";
-import { useState } from "react";
+import { useState, startTransition } from "react";
 
 const WordDetail = () => {
   const { id } = useParams();
@@ -12,7 +12,9 @@ const WordDetail = () => {
   const [isFavorite, setIsFavorite] = useState(false);
 
   const handleBack = () => {
-    navigate("/", { state: { scrollPosition: location.state?.scrollPosition || 0 } });
+    startTransition(() => {
+      navigate("/", { state: { scrollPosition: location.state?.scrollPosition || 0 } });
+    });
   };
   
   const word = mockWords.find((w) => w.id === id);
