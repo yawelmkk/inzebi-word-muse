@@ -3,7 +3,14 @@ import { useNavigate, useLocation } from "react-router-dom";
 import { SearchBar } from "@/components/SearchBar";
 import { WordCard } from "@/components/WordCard";
 import { mockWords } from "@/data/mockWords";
-import { Sparkles, BookOpen } from "lucide-react";
+import { Sparkles, BookOpen, MoreVertical, Settings, Info, Mail, Link } from "lucide-react";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { Button } from "@/components/ui/button";
 
 const Index = () => {
   const [searchQuery, setSearchQuery] = useState("");
@@ -83,11 +90,42 @@ const Index = () => {
       {/* Hero Header */}
       <div className="gradient-warm p-4 pb-6 shadow-soft">
         <div className="max-w-4xl mx-auto">
-          <div className="flex items-center justify-center gap-3 mb-4">
-            <BookOpen className="h-8 w-8 text-primary-foreground" />
-            <h1 className="text-3xl md:text-4xl font-bold text-primary-foreground text-center">
-              Dictionnaire Inzébi
-            </h1>
+          <div className="flex items-center justify-between mb-4">
+            <div className="flex items-center gap-3 flex-1 justify-center">
+              <BookOpen className="h-8 w-8 text-primary-foreground" />
+              <h1 className="text-3xl md:text-4xl font-bold text-primary-foreground text-center">
+                Dictionnaire Inzébi
+              </h1>
+            </div>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button 
+                  variant="ghost" 
+                  size="icon"
+                  className="text-primary-foreground hover:bg-primary-foreground/20"
+                >
+                  <MoreVertical className="h-6 w-6" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="w-48">
+                <DropdownMenuItem>
+                  <Settings className="mr-2 h-4 w-4" />
+                  <span>Paramètres</span>
+                </DropdownMenuItem>
+                <DropdownMenuItem>
+                  <Info className="mr-2 h-4 w-4" />
+                  <span>À propos</span>
+                </DropdownMenuItem>
+                <DropdownMenuItem>
+                  <Mail className="mr-2 h-4 w-4" />
+                  <span>Contactez-nous</span>
+                </DropdownMenuItem>
+                <DropdownMenuItem>
+                  <Link className="mr-2 h-4 w-4" />
+                  <span>Liens utiles</span>
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
           </div>
         </div>
       </div>
@@ -159,7 +197,7 @@ const Index = () => {
         {!searchQuery && (
           <div className="mt-12 animate-fade-in">
             <h2 className="text-xl font-semibold text-foreground mb-4">
-              Tous les mots ({mockWords.length})
+              Tous les mots
             </h2>
             <div className="space-y-4">
               {mockWords.slice(0, displayLimit).map((word) => (
