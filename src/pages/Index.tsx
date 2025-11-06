@@ -3,18 +3,26 @@ import { useNavigate, useLocation } from "react-router-dom";
 import { SearchBar } from "@/components/SearchBar";
 import { WordCard } from "@/components/WordCard";
 import { mockWords } from "@/data/mockWords";
-import { Sparkles, BookOpen, MoreVertical, Settings, Info, Mail, Link } from "lucide-react";
+import { Sparkles, BookOpen, MoreVertical, Settings, Info, Mail, Link, MessageCircle } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 
 const Index = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [displayLimit, setDisplayLimit] = useState(50);
+  const [isContactDialogOpen, setIsContactDialogOpen] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
   const scrollPositionRef = useRef(0);
@@ -116,7 +124,7 @@ const Index = () => {
                   <Info className="mr-2 h-4 w-4" />
                   <span>À propos</span>
                 </DropdownMenuItem>
-                <DropdownMenuItem>
+                <DropdownMenuItem onClick={() => setIsContactDialogOpen(true)}>
                   <Mail className="mr-2 h-4 w-4" />
                   <span>Contactez-nous</span>
                 </DropdownMenuItem>
@@ -129,6 +137,42 @@ const Index = () => {
           </div>
         </div>
       </div>
+
+      {/* Contact Dialog */}
+      <Dialog open={isContactDialogOpen} onOpenChange={setIsContactDialogOpen}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle>Contactez-nous</DialogTitle>
+            <DialogDescription>
+              Choisissez votre méthode de contact préférée
+            </DialogDescription>
+          </DialogHeader>
+          <div className="flex flex-col gap-3 mt-4">
+            <Button
+              onClick={() => {
+                window.open('https://wa.me/24176208199', '_blank');
+                setIsContactDialogOpen(false);
+              }}
+              className="w-full flex items-center justify-center gap-2"
+              variant="default"
+            >
+              <MessageCircle className="h-5 w-5" />
+              Contacter via WhatsApp
+            </Button>
+            <Button
+              onClick={() => {
+                window.location.href = 'mailto:languenzebiofficiel@gmail.com';
+                setIsContactDialogOpen(false);
+              }}
+              className="w-full flex items-center justify-center gap-2"
+              variant="secondary"
+            >
+              <Mail className="h-5 w-5" />
+              Contacter par Email
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
 
       {/* Sticky Search Bar */}
       <div className="sticky top-0 z-10 bg-background shadow-md py-4">
