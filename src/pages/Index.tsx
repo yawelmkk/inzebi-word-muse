@@ -7,9 +7,11 @@ import { Sparkles, BookOpen } from "lucide-react";
 
 const Index = () => {
   const [searchQuery, setSearchQuery] = useState("");
+  const [displayLimit, setDisplayLimit] = useState(50);
   const navigate = useNavigate();
   const location = useLocation();
   const scrollPositionRef = useRef(0);
+  const observerTarget = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     // Restaurer la position de scroll instantanément si on revient de la page de détail
@@ -17,6 +19,29 @@ const Index = () => {
       window.scrollTo(0, location.state.scrollPosition);
     }
   }, [location.state]);
+
+  // Infinite scroll pour charger plus de mots
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting && displayLimit < mockWords.length) {
+          setDisplayLimit((prev) => Math.min(prev + 50, mockWords.length));
+        }
+      },
+      { threshold: 0.1 }
+    );
+
+    const currentTarget = observerTarget.current;
+    if (currentTarget) {
+      observer.observe(currentTarget);
+    }
+
+    return () => {
+      if (currentTarget) {
+        observer.unobserve(currentTarget);
+      }
+    };
+  }, [displayLimit]);
 
   const handleWordClick = (wordId: string) => {
     // Sauvegarder la position actuelle avant de naviguer
@@ -134,10 +159,10 @@ const Index = () => {
         {!searchQuery && (
           <div className="mt-12 animate-fade-in">
             <h2 className="text-xl font-semibold text-foreground mb-4">
-              Tous les mots
+              Tous les mots ({mockWords.length})
             </h2>
             <div className="space-y-4">
-              {mockWords.map((word) => (
+              {mockWords.slice(0, displayLimit).map((word) => (
               <WordCard
                 key={word.id}
                 word={word.nzebi_word}
@@ -147,6 +172,15 @@ const Index = () => {
               />
               ))}
             </div>
+            {/* Observateur pour le chargement progressif */}
+            {displayLimit < mockWords.length && (
+              <div ref={observerTarget} className="py-8 text-center">
+                <div className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-primary border-r-transparent"></div>
+                <p className="mt-2 text-sm text-muted-foreground">
+                  Chargement... ({displayLimit}/{mockWords.length})
+                </p>
+              </div>
+            )}
           </div>
         )}
       </div>
