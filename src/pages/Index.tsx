@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useMemo } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { SearchBar } from "@/components/SearchBar";
 import { WordCard } from "@/components/WordCard";
@@ -14,12 +14,7 @@ const Index = () => {
   useEffect(() => {
     // Restaurer la position de scroll instantanément si on revient de la page de détail
     if (location.state?.scrollPosition !== undefined) {
-      requestAnimationFrame(() => {
-        window.scrollTo({
-          top: location.state.scrollPosition,
-          behavior: 'instant'
-        });
-      });
+      window.scrollTo(0, location.state.scrollPosition);
     }
   }, [location.state]);
 
@@ -35,8 +30,8 @@ const Index = () => {
       word.french_word.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
-  // Sélectionner 3 mots différents chaque jour
-  const getDailyFeaturedWords = () => {
+  // Sélectionner 3 mots différents chaque jour (mémorisé pour éviter les recalculs)
+  const featuredWords = useMemo(() => {
     const today = new Date();
     const dateString = `${today.getFullYear()}-${today.getMonth()}-${today.getDate()}`;
     
@@ -56,9 +51,7 @@ const Index = () => {
     }
     
     return Array.from(indices).map(index => mockWords[index]);
-  };
-
-  const featuredWords = getDailyFeaturedWords();
+  }, []); // Recalculé seulement au montage du composant
 
   return (
     <div className="min-h-screen bg-background pb-20">
