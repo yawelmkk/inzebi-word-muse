@@ -17,12 +17,14 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
 
 const Index = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [displayLimit, setDisplayLimit] = useState(50);
   const [isContactDialogOpen, setIsContactDialogOpen] = useState(false);
+  const [activeTab, setActiveTab] = useState("dictionary");
   const navigate = useNavigate();
   const location = useLocation();
   const scrollPositionRef = useRef(0);
@@ -70,7 +72,7 @@ const Index = () => {
       word.french_word.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
-  // Sélectionner 3 mots différents chaque jour (mémorisé pour éviter les recalculs)
+  // Sélectionner 5 mots différents chaque jour (mémorisé pour éviter les recalculs)
   const featuredWords = useMemo(() => {
     const today = new Date();
     const dateString = `${today.getFullYear()}-${today.getMonth()}-${today.getDate()}`;
@@ -81,11 +83,11 @@ const Index = () => {
       seed = (seed * 31 + dateString.charCodeAt(i)) % mockWords.length;
     }
     
-    // Sélectionner 3 mots différents basés sur le seed
+    // Sélectionner 5 mots différents basés sur le seed
     const indices = new Set<number>();
     let currentSeed = seed;
     
-    while (indices.size < 3 && indices.size < mockWords.length) {
+    while (indices.size < 5 && indices.size < mockWords.length) {
       indices.add(currentSeed % mockWords.length);
       currentSeed = (currentSeed * 7 + 13) % mockWords.length;
     }
@@ -174,97 +176,115 @@ const Index = () => {
         </DialogContent>
       </Dialog>
 
-      {/* Sticky Search Bar */}
-      <div className="sticky top-0 z-10 bg-background shadow-md py-4">
-        <div className="max-w-4xl mx-auto px-4">
-          <SearchBar
-            value={searchQuery}
-            onChange={setSearchQuery}
-            placeholder="Rechercher un mot en Inzébi ou en Français..."
-          />
-        </div>
-      </div>
+      {/* Tabs Navigation */}
+      <div className="max-w-4xl mx-auto px-4 pt-6">
+        <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+          <TabsList className="grid w-full grid-cols-2 mb-6">
+            <TabsTrigger value="dictionary" className="flex items-center gap-2">
+              <BookOpen className="h-4 w-4" />
+              Dictionnaire
+            </TabsTrigger>
+            <TabsTrigger value="wordofday" className="flex items-center gap-2">
+              <Sparkles className="h-4 w-4" />
+              Mots du jour
+            </TabsTrigger>
+          </TabsList>
 
-      <div className="max-w-4xl mx-auto px-4 mt-6">
-        {/* Featured Words */}
-        {!searchQuery && (
-          <div className="mb-8 animate-fade-in">
-            <div className="flex items-center gap-2 mb-4">
-              <Sparkles className="h-5 w-5 text-primary" />
-              <h2 className="text-xl font-semibold text-foreground">
-                Mots du jour
-              </h2>
-            </div>
-            <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-              {featuredWords.map((word) => (
-              <WordCard
-                key={word.id}
-                word={word.nzebi_word}
-                translation={word.french_word}
-                partOfSpeech={word.part_of_speech}
-                onClick={() => handleWordClick(word.id)}
+          {/* Dictionary Tab */}
+          <TabsContent value="dictionary" className="mt-0">
+            {/* Search Bar */}
+            <div className="mb-6">
+              <SearchBar
+                value={searchQuery}
+                onChange={setSearchQuery}
+                placeholder="Rechercher un mot en Inzébi ou en Français..."
               />
-              ))}
             </div>
-          </div>
-        )}
 
-        {/* Search Results */}
-        {searchQuery && (
-          <div className="animate-fade-in">
-            <h2 className="text-xl font-semibold text-foreground mb-4">
-              {filteredWords.length} résultat{filteredWords.length > 1 ? "s" : ""}
-            </h2>
-            <div className="space-y-4">
-              {filteredWords.length > 0 ? (
-                filteredWords.map((word) => (
-              <WordCard
-                key={word.id}
-                word={word.nzebi_word}
-                translation={word.french_word}
-                partOfSpeech={word.part_of_speech}
-                onClick={() => handleWordClick(word.id)}
-              />
-                ))
-              ) : (
-                <div className="text-center py-12">
-                  <p className="text-muted-foreground text-lg">
-                    Aucun mot trouvé pour "{searchQuery}"
-                  </p>
+            {/* Search Results */}
+            {searchQuery && (
+              <div className="animate-fade-in">
+                <h2 className="text-xl font-semibold text-foreground mb-4">
+                  {filteredWords.length} résultat{filteredWords.length > 1 ? "s" : ""}
+                </h2>
+                <div className="space-y-4">
+                  {filteredWords.length > 0 ? (
+                    filteredWords.map((word) => (
+                      <WordCard
+                        key={word.id}
+                        word={word.nzebi_word}
+                        translation={word.french_word}
+                        partOfSpeech={word.part_of_speech}
+                        onClick={() => handleWordClick(word.id)}
+                      />
+                    ))
+                  ) : (
+                    <div className="text-center py-12">
+                      <p className="text-muted-foreground text-lg">
+                        Aucun mot trouvé pour "{searchQuery}"
+                      </p>
+                    </div>
+                  )}
                 </div>
-              )}
-            </div>
-          </div>
-        )}
-
-        {/* All Words Section */}
-        {!searchQuery && (
-          <div className="mt-12 animate-fade-in">
-            <h2 className="text-xl font-semibold text-foreground mb-4">
-              Tous les mots
-            </h2>
-            <div className="space-y-4">
-              {mockWords.slice(0, displayLimit).map((word) => (
-              <WordCard
-                key={word.id}
-                word={word.nzebi_word}
-                translation={word.french_word}
-                partOfSpeech={word.part_of_speech}
-                onClick={() => handleWordClick(word.id)}
-              />
-              ))}
-            </div>
-            {/* Observateur pour le chargement progressif */}
-            {displayLimit < mockWords.length && (
-              <div ref={observerTarget} className="py-8 text-center">
-                <div className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-primary border-r-transparent"></div>
-                <p className="mt-2 text-sm text-muted-foreground">
-                  Chargement... ({displayLimit}/{mockWords.length})
-                </p>
               </div>
             )}
-          </div>
-        )}
+
+            {/* All Words Section */}
+            {!searchQuery && (
+              <div className="animate-fade-in">
+                <h2 className="text-xl font-semibold text-foreground mb-4">
+                  Tous les mots
+                </h2>
+                <div className="space-y-4">
+                  {mockWords.slice(0, displayLimit).map((word) => (
+                    <WordCard
+                      key={word.id}
+                      word={word.nzebi_word}
+                      translation={word.french_word}
+                      partOfSpeech={word.part_of_speech}
+                      onClick={() => handleWordClick(word.id)}
+                    />
+                  ))}
+                </div>
+                {/* Observateur pour le chargement progressif */}
+                {displayLimit < mockWords.length && (
+                  <div ref={observerTarget} className="py-8 text-center">
+                    <div className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-primary border-r-transparent"></div>
+                    <p className="mt-2 text-sm text-muted-foreground">
+                      Chargement... ({displayLimit}/{mockWords.length})
+                    </p>
+                  </div>
+                )}
+              </div>
+            )}
+          </TabsContent>
+
+          {/* Word of the Day Tab */}
+          <TabsContent value="wordofday" className="mt-0">
+            <div className="animate-fade-in">
+              <div className="mb-6">
+                <h2 className="text-2xl font-bold text-foreground flex items-center gap-2">
+                  <Sparkles className="h-6 w-6 text-primary" />
+                  Mots du jour
+                </h2>
+                <p className="text-muted-foreground mt-2">
+                  Découvrez les {featuredWords.length} mots sélectionnés pour aujourd'hui
+                </p>
+              </div>
+              <div className="space-y-4">
+                {featuredWords.map((word) => (
+                  <WordCard
+                    key={word.id}
+                    word={word.nzebi_word}
+                    translation={word.french_word}
+                    partOfSpeech={word.part_of_speech}
+                    onClick={() => handleWordClick(word.id)}
+                  />
+                ))}
+              </div>
+            </div>
+          </TabsContent>
+        </Tabs>
       </div>
     </div>
   );
