@@ -193,7 +193,7 @@ const Index = () => {
           {/* Dictionary Tab */}
           <TabsContent value="dictionary" className="mt-0">
             {/* Search Bar */}
-            <div className="mb-6">
+            <div className="sticky top-0 z-20 bg-background pb-6 pt-0">
               <SearchBar
                 value={searchQuery}
                 onChange={setSearchQuery}
