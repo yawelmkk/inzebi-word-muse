@@ -3,7 +3,7 @@ import { useNavigate, useLocation } from "react-router-dom";
 import { SearchBar } from "@/components/SearchBar";
 import { WordCard } from "@/components/WordCard";
 import { mockWords } from "@/data/mockWords";
-import { Sparkles, BookOpen, MoreVertical, Settings, Info, Mail, Link, MessageCircle } from "lucide-react";
+import { Sparkles, BookOpen, MoreVertical, Settings, Info, Mail, Link, MessageCircle, Facebook, Youtube } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -24,6 +24,8 @@ const Index = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [displayLimit, setDisplayLimit] = useState(50);
   const [isContactDialogOpen, setIsContactDialogOpen] = useState(false);
+  const [isLinksDialogOpen, setIsLinksDialogOpen] = useState(false);
+  const [isAboutDialogOpen, setIsAboutDialogOpen] = useState(false);
   const [activeTab, setActiveTab] = useState("dictionary");
   const navigate = useNavigate();
   const location = useLocation();
@@ -122,7 +124,7 @@ const Index = () => {
                   <Settings className="mr-2 h-4 w-4" />
                   <span>Paramètres</span>
                 </DropdownMenuItem>
-                <DropdownMenuItem>
+                <DropdownMenuItem onClick={() => setIsAboutDialogOpen(true)}>
                   <Info className="mr-2 h-4 w-4" />
                   <span>À propos</span>
                 </DropdownMenuItem>
@@ -130,7 +132,7 @@ const Index = () => {
                   <Mail className="mr-2 h-4 w-4" />
                   <span>Contactez-nous</span>
                 </DropdownMenuItem>
-                <DropdownMenuItem>
+                <DropdownMenuItem onClick={() => setIsLinksDialogOpen(true)}>
                   <Link className="mr-2 h-4 w-4" />
                   <span>Liens utiles</span>
                 </DropdownMenuItem>
@@ -172,6 +174,119 @@ const Index = () => {
               <Mail className="h-5 w-5" />
               Contacter par Email
             </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      {/* Links Dialog */}
+      <Dialog open={isLinksDialogOpen} onOpenChange={setIsLinksDialogOpen}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle>Liens utiles</DialogTitle>
+            <DialogDescription>
+              Suivez-nous sur les réseaux sociaux
+            </DialogDescription>
+          </DialogHeader>
+          <div className="flex flex-col gap-3 mt-4">
+            <Button
+              onClick={() => {
+                window.open('https://www.facebook.com/languenzebiofficiel', '_blank');
+                setIsLinksDialogOpen(false);
+              }}
+              className="w-full flex items-center justify-center gap-2"
+              variant="default"
+            >
+              <Facebook className="h-5 w-5" />
+              Facebook
+            </Button>
+            <Button
+              onClick={() => {
+                window.open('https://www.youtube.com/@langue-nzebi-officiel', '_blank');
+                setIsLinksDialogOpen(false);
+              }}
+              className="w-full flex items-center justify-center gap-2"
+              variant="secondary"
+            >
+              <Youtube className="h-5 w-5" />
+              YouTube
+            </Button>
+            <Button
+              onClick={() => {
+                window.open('https://www.tiktok.com/@langue.nzbi.offic', '_blank');
+                setIsLinksDialogOpen(false);
+              }}
+              className="w-full flex items-center justify-center gap-2"
+              variant="secondary"
+            >
+              <MessageCircle className="h-5 w-5" />
+              TikTok
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      {/* About Dialog */}
+      <Dialog open={isAboutDialogOpen} onOpenChange={setIsAboutDialogOpen}>
+        <DialogContent className="sm:max-w-2xl max-h-[80vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle>À propos</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4 text-sm text-foreground leading-relaxed">
+            <p>
+              Le dictionnaire Nzébi-français est une application conçue pour préserver, valoriser et transmettre la langue et le patrimoine culturel de l'ethnie Nzébi du Gabon et du Congo.
+            </p>
+            <p>
+              Elle permet à tout utilisateur de découvrir des mots en langue nzébi, leur traduction en français, et dans certains cas, leur prononciation audio, afin d'en faciliter l'apprentissage et la mémorisation.
+            </p>
+            <p>
+              Ce projet s'inscrit dans une démarche de sauvegarde des langues gabonaises minoritaires, souvent menacées de disparition à cause de l'exode rural, de la domination du français, et du vieillissement des locuteurs natifs.
+            </p>
+            
+            <h3 className="font-semibold text-base mt-4">Origine des données linguistiques</h3>
+            <p>
+              Les données de ce dictionnaire proviennent d'un travail existant, réalisé par: Luc de NADAILLAC, sous la forme d'un PDF librement accessible en ligne. Ce dictionnaire numérique ne prétend en aucun cas s'approprier ce travail. Au contraire, il vise à le valoriser, le diffuser et le rendre plus accessible, notamment aux jeunes générations.
+            </p>
+            <p>
+              Nous reconnaissons et respectons la propriété intellectuelle de l'auteur initial, et l'application ne saurait exister sans sa contribution précieuse.
+            </p>
+            
+            <h3 className="font-semibold text-base mt-4">Qui sont les Nzébi ?</h3>
+            <p>
+              Les Nzébi (ou Ndzébi, parfois écrit Njebi) sont un peuple bantou du Gabon et du Congo-Brazzaville. Au Gabon, ils sont principalement présents dans le sud-est du pays.
+            </p>
+            
+            <h4 className="font-semibold mt-3">Localisation</h4>
+            <p>
+              Ils sont installés dans la province du Haut-Ogooué (notamment autour de Franceville, Moanda, Bongoville) et aussi dans le sud de la Ngounié (Mbigou, Mandji, Lébamba, Mouila).
+            </p>
+            <p>
+              Le territoire nzébi se situe entre forêts équatoriales, plateaux sablonneux et zones minières, en bordure du fleuve Ogooué et de ses affluents.
+            </p>
+            
+            <h4 className="font-semibold mt-3">Population</h4>
+            <p>
+              Leur population est estimée entre 50 000 et 70 000 personnes au Gabon, bien que beaucoup aient migré vers les villes comme Libreville ou Port-Gentil. Certains groupes Nzébi sont également présents au Congo-Brazzaville.
+            </p>
+            
+            <h4 className="font-semibold mt-3">Histoire, culture et langue</h4>
+            <p>
+              Les Nzébi descendent de peuples bantous migrants, venus des rives du fleuve Congo.
+            </p>
+            <p>
+              Ils sont réputés pour leur culture spirituelle riche, leurs rituels d'initiation (Bwiti, Mwiri, etc.), leurs masques traditionnels et leur oralité poétique.
+            </p>
+            <p>
+              Leur langue, le nzébi, fait partie du groupe B.50 des langues bantoues, avec une grammaire complexe fondée sur les classes nominales et un système de tons.
+            </p>
+            <p>
+              Cependant, cette langue est aujourd'hui en danger, menacée par la prédominance du français dans l'enseignement, les médias et la vie sociale. C'est pourquoi cette application souhaite contribuer, à son échelle, à la préservation de ce patrimoine linguistique précieux.
+            </p>
+            <p className="font-medium mt-4">
+              En utilisant cette application, vous participez activement à la transmission de la langue nzébi. Merci de votre engagement et de votre curiosité.
+            </p>
+            <p className="font-medium">
+              Merci d'utiliser cette application et de soutenir la mission de Langue Nzébi Officiel. En diffusant et en pratiquant la langue nzébi, vous aidez à faire vivre un patrimoine culturel précieux.
+            </p>
           </div>
         </DialogContent>
       </Dialog>
