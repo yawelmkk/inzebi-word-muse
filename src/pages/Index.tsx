@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef, useMemo } from "react";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { SearchBar } from "@/components/SearchBar";
 import { WordCard } from "@/components/WordCard";
 import { mockWords } from "@/data/mockWords";
@@ -21,23 +21,32 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
 
 const Index = () => {
+  // Restaurer l'état depuis sessionStorage
+  const savedState = sessionStorage.getItem('dictionaryState');
+  const parsedState = savedState ? JSON.parse(savedState) : null;
+  
   const [searchQuery, setSearchQuery] = useState("");
-  const [displayLimit, setDisplayLimit] = useState(50);
+  const [displayLimit, setDisplayLimit] = useState(parsedState?.displayLimit || 50);
   const [isContactDialogOpen, setIsContactDialogOpen] = useState(false);
   const [isLinksDialogOpen, setIsLinksDialogOpen] = useState(false);
   const [isAboutDialogOpen, setIsAboutDialogOpen] = useState(false);
-  const [activeTab, setActiveTab] = useState("dictionary");
+  const [activeTab, setActiveTab] = useState(parsedState?.activeTab || "dictionary");
   const navigate = useNavigate();
-  const location = useLocation();
-  const scrollPositionRef = useRef(0);
   const observerTarget = useRef<HTMLDivElement>(null);
+  const hasRestoredScroll = useRef(false);
 
+  // Restaurer la position de scroll après le premier rendu
   useEffect(() => {
-    // Restaurer la position de scroll instantanément si on revient de la page de détail
-    if (location.state?.scrollPosition !== undefined) {
-      window.scrollTo(0, location.state.scrollPosition);
+    if (parsedState?.scrollPosition && !hasRestoredScroll.current) {
+      hasRestoredScroll.current = true;
+      // Attendre que le DOM soit rendu avec les bons éléments
+      requestAnimationFrame(() => {
+        window.scrollTo(0, parsedState.scrollPosition);
+        // Nettoyer après restauration
+        sessionStorage.removeItem('dictionaryState');
+      });
     }
-  }, [location.state]);
+  }, []);
 
   // Infinite scroll pour charger plus de mots
   useEffect(() => {
@@ -63,9 +72,14 @@ const Index = () => {
   }, [displayLimit]);
 
   const handleWordClick = (wordId: string) => {
-    // Sauvegarder la position actuelle avant de naviguer
-    scrollPositionRef.current = window.scrollY;
-    navigate(`/word/${wordId}`, { state: { scrollPosition: scrollPositionRef.current } });
+    // Sauvegarder l'état complet avant de naviguer
+    const stateToSave = {
+      scrollPosition: window.scrollY,
+      displayLimit,
+      activeTab
+    };
+    sessionStorage.setItem('dictionaryState', JSON.stringify(stateToSave));
+    navigate(`/word/${wordId}`);
   };
 
   const filteredWords = mockWords.filter(

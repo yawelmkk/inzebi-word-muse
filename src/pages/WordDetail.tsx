@@ -1,4 +1,4 @@
-import { useParams, useNavigate, useLocation } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { ArrowLeft, Heart, Volume2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -8,12 +8,11 @@ import { useState, startTransition } from "react";
 const WordDetail = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-  const location = useLocation();
   const [isFavorite, setIsFavorite] = useState(false);
 
   const handleBack = () => {
     startTransition(() => {
-      navigate("/", { state: { scrollPosition: location.state?.scrollPosition || 0 } });
+      navigate("/");
     });
   };
   
