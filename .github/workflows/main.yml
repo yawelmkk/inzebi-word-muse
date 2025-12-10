@@ -38,4 +38,5 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }} # Utilise le jeton avec les permissions Write
           publish_dir: ./dist
           force_orphan: true
+          publish_branch: gh-pages
           cname: '' # Assurez-vous qu'il n'y ait pas de CNAME qui interfère
