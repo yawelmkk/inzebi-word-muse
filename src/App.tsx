@@ -3,6 +3,7 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { ThemeProvider } from "next-themes";
 import Index from "./pages/Index";
 import WordDetail from "./pages/WordDetail";
 import NotFound from "./pages/NotFound";
@@ -12,22 +13,19 @@ const queryClient = new QueryClient();
 const App = () => {
   return (
     <QueryClientProvider client={queryClient}>
-<<<<<<< HEAD
-      {/* 🚨 CORRECTION FINALE : Ajout du basename */}
-      <BrowserRouter basename="/inzebi-word-muse"> 
-=======
-      <BrowserRouter>
->>>>>>> f25caf121af78a0e7b9b6f0bd51f8f6b1b20bbd2
-        <TooltipProvider>
-          <Toaster />
-          <Sonner />
-          <Routes>
-            <Route path="/" element={<Index />} />
-            <Route path="/word/:id" element={<WordDetail />} />
-            <Route path="*" element={<NotFound />} />
-          </Routes>
-        </TooltipProvider>
-      </BrowserRouter>
+      <ThemeProvider attribute="class" defaultTheme="light" enableSystem>
+        <BrowserRouter basename="/inzebi-word-muse">
+          <TooltipProvider>
+            <Toaster />
+            <Sonner />
+            <Routes>
+              <Route path="/" element={<Index />} />
+              <Route path="/word/:id" element={<WordDetail />} />
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+          </TooltipProvider>
+        </BrowserRouter>
+      </ThemeProvider>
     </QueryClientProvider>
   );
 };

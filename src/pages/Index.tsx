@@ -2,8 +2,9 @@ import { useState, useEffect, useRef, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { SearchBar } from "@/components/SearchBar";
 import { WordCard } from "@/components/WordCard";
+import { ThemeToggle } from "@/components/ThemeToggle";
 import { mockWords } from "@/data/mockWords";
-import { Sparkles, BookOpen, MoreVertical, Settings, Info, Mail, Link, MessageCircle, Facebook, Youtube } from "lucide-react";
+import { Sparkles, BookOpen, MoreVertical, Info, Mail, Link, MessageCircle, Facebook, Youtube } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -123,35 +124,34 @@ const Index = () => {
                 Dictionnaire Inzébi
               </h1>
             </div>
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button 
-                  variant="ghost" 
-                  size="icon"
-                  className="text-primary-foreground hover:bg-primary-foreground/20"
-                >
-                  <MoreVertical className="h-6 w-6" />
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end" className="w-48">
-                <DropdownMenuItem>
-                  <Settings className="mr-2 h-4 w-4" />
-                  <span>Paramètres</span>
-                </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => setIsAboutDialogOpen(true)}>
-                  <Info className="mr-2 h-4 w-4" />
-                  <span>À propos</span>
-                </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => setIsContactDialogOpen(true)}>
-                  <Mail className="mr-2 h-4 w-4" />
-                  <span>Contactez-nous</span>
-                </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => setIsLinksDialogOpen(true)}>
-                  <Link className="mr-2 h-4 w-4" />
-                  <span>Liens utiles</span>
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
+            <div className="flex items-center gap-1">
+              <ThemeToggle />
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button 
+                    variant="ghost" 
+                    size="icon"
+                    className="text-primary-foreground hover:bg-primary-foreground/20"
+                  >
+                    <MoreVertical className="h-6 w-6" />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end" className="w-48">
+                  <DropdownMenuItem onClick={() => setIsAboutDialogOpen(true)}>
+                    <Info className="mr-2 h-4 w-4" />
+                    <span>À propos</span>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => setIsContactDialogOpen(true)}>
+                    <Mail className="mr-2 h-4 w-4" />
+                    <span>Contactez-nous</span>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => setIsLinksDialogOpen(true)}>
+                    <Link className="mr-2 h-4 w-4" />
+                    <span>Liens utiles</span>
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            </div>
           </div>
         </div>
       </div>
