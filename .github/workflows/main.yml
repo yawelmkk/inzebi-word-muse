@@ -8,11 +8,14 @@ on:
 
 jobs:
   deploy:
-    permissions: # AJOUTEZ CETTE SECTION
-      contents: write # Permet d'écrire sur le dépôt (pour le push)
-      pages: write    # Permet de publier sur GitHub Pages
-      id-token: write # Nécessaire pour l'authentification
     runs-on: ubuntu-latest
+    
+    #  AJOUT DE LA PERMISSION SPÉCIFIQUE AU JETON ICI
+    permissions:
+      contents: write
+      pages: write
+      id-token: write
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -29,8 +32,10 @@ jobs:
         run: npm run build
 
       - name: Deploy to GitHub Pages
+        #  FORCER LE JETON DE DÉPLOIEMENT
         uses: peaceiris/actions-gh-pages@v3
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
+          github_token: ${{ secrets.GITHUB_TOKEN }} # Utilise le jeton avec les permissions Write
           publish_dir: ./dist
           force_orphan: true
+          cname: '' # Assurez-vous qu'il n'y ait pas de CNAME qui interfère
