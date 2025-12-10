@@ -8,6 +8,10 @@ on:
 
 jobs:
   deploy:
+    permissions: # AJOUTEZ CETTE SECTION
+      contents: write # Permet d'écrire sur le dépôt (pour le push)
+      pages: write    # Permet de publier sur GitHub Pages
+      id-token: write # Nécessaire pour l'authentification
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -16,7 +20,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20' # Utilisez une version LTS stable
+          node-version: '20'
 
       - name: Install dependencies
         run: npm install
@@ -28,5 +32,5 @@ jobs:
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./dist  # PUBLIE LE CONTENU DU DOSSIER 'dist'
+          publish_dir: ./dist
           force_orphan: true
