@@ -12,8 +12,12 @@ const queryClient = new QueryClient();
 const App = () => {
   return (
     <QueryClientProvider client={queryClient}>
+<<<<<<< HEAD
       {/* 🚨 CORRECTION FINALE : Ajout du basename */}
       <BrowserRouter basename="/inzebi-word-muse"> 
+=======
+      <BrowserRouter>
+>>>>>>> f25caf121af78a0e7b9b6f0bd51f8f6b1b20bbd2
         <TooltipProvider>
           <Toaster />
           <Sonner />
