@@ -8,8 +8,8 @@ import WordDetail from "./pages/WordDetail";
 import NotFound from "./pages/NotFound";
 
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-// CORRECTION ICI : Remplacer l'importation nommée par l'importation par défaut (et renommé)
-import SonnerComponent from "@/components/ui/sonner";
+// CORRECTION FINALE ICI : Importation nommée pour Sonner
+import { Sonner } from "@/components/ui/sonner";
 
 const queryClient = new QueryClient();
 
@@ -20,7 +20,7 @@ const App = () => {
         <BrowserRouter basename="/inzebi-word-muse">
           <TooltipProvider>
             <Toaster />
-            <SonnerComponent /> {/* Utiliser le nom corrigé */}
+            <Sonner /> {/* Utilisation de <Sonner /> */}
 
             <Routes>
               <Route path="/" element={<Index />} />
