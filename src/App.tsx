@@ -8,8 +8,7 @@ import WordDetail from "./pages/WordDetail";
 import NotFound from "./pages/NotFound";
 
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-// Importation nommée simple (comme première tentative)
-import { Sonner } from "@/components/ui/sonner"; 
+// L'import de Sonner est supprimé car il fait échouer le build.
 
 const queryClient = new QueryClient();
 
@@ -20,7 +19,7 @@ const App = () => {
         <BrowserRouter basename="/inzebi-word-muse">
           <TooltipProvider>
             <Toaster />
-            <Sonner /> 
+            {/* Le composant Sonner est supprimé pour le build */}
 
             <Routes>
               <Route path="/" element={<Index />} />
