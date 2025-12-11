@@ -8,8 +8,8 @@ import WordDetail from "./pages/WordDetail";
 import NotFound from "./pages/NotFound";
 
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-// CORRECTION FINALE ICI : Importation nommée pour Sonner
-import { Sonner } from "@/components/ui/sonner";
+// CORRECTION FINALE ICI : Importation nommée avec un alias pour contourner l'erreur de build
+import { Sonner as SonnerToast } from "@/components/ui/sonner";
 
 const queryClient = new QueryClient();
 
@@ -20,7 +20,7 @@ const App = () => {
         <BrowserRouter basename="/inzebi-word-muse">
           <TooltipProvider>
             <Toaster />
-            <Sonner /> {/* Utilisation de <Sonner /> */}
+            <SonnerToast /> {/* Utilisation de l'alias */}
 
             <Routes>
               <Route path="/" element={<Index />} />
