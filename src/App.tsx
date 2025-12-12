@@ -16,7 +16,7 @@ const App = () => {
   return (
     <QueryClientProvider client={queryClient}>
       <ThemeProvider attribute="class" defaultTheme="light" enableSystem>
-        <BrowserRouter basename="/inzebi-word-muse">
+        <BrowserRouter basename={import.meta.env.PROD ? "/inzebi-word-muse" : "/"}>
           <TooltipProvider>
             <Toaster />
             {/* Le composant Sonner est supprimé pour le build */}
