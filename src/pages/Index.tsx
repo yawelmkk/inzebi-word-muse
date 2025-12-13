@@ -1,7 +1,6 @@
 import { useState, useEffect, useRef, useMemo } from "react";
-import { useNavigate } from "react-router-dom";
 import { SearchBar } from "@/components/SearchBar";
-import { WordCard } from "@/components/WordCard";
+import { WordAccordionItem } from "@/components/WordAccordionItem";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { mockWords } from "@/data/mockWords";
 import { Sparkles, BookOpen, MoreVertical, Info, Mail, Link, MessageCircle, Facebook, Youtube } from "lucide-react";
@@ -32,7 +31,6 @@ const Index = () => {
   const [isLinksDialogOpen, setIsLinksDialogOpen] = useState(false);
   const [isAboutDialogOpen, setIsAboutDialogOpen] = useState(false);
   const [activeTab, setActiveTab] = useState(parsedState?.activeTab || "dictionary");
-  const navigate = useNavigate();
   const observerTarget = useRef<HTMLDivElement>(null);
   const hasRestoredScroll = useRef(false);
 
@@ -71,17 +69,6 @@ const Index = () => {
       }
     };
   }, [displayLimit]);
-
-  const handleWordClick = (wordId: string) => {
-    // Sauvegarder l'état complet avant de naviguer
-    const stateToSave = {
-      scrollPosition: window.scrollY,
-      displayLimit,
-      activeTab
-    };
-    sessionStorage.setItem('dictionaryState', JSON.stringify(stateToSave));
-    navigate(`/word/${wordId}`);
-  };
 
   const filteredWords = mockWords.filter(
     (word) =>
@@ -336,16 +323,10 @@ const Index = () => {
                 <h2 className="text-xl font-semibold text-foreground mb-4">
                   {filteredWords.length} résultat{filteredWords.length > 1 ? "s" : ""}
                 </h2>
-                <div className="space-y-4">
+                <div className="space-y-3">
                   {filteredWords.length > 0 ? (
                     filteredWords.map((word) => (
-                      <WordCard
-                        key={word.id}
-                        word={word.nzebi_word}
-                        translation={word.french_word}
-                        partOfSpeech={word.part_of_speech}
-                        onClick={() => handleWordClick(word.id)}
-                      />
+                      <WordAccordionItem key={word.id} word={word} />
                     ))
                   ) : (
                     <div className="text-center py-12">
@@ -364,15 +345,9 @@ const Index = () => {
                 <h2 className="text-xl font-semibold text-foreground mb-4">
                   Tous les mots
                 </h2>
-                <div className="space-y-4">
+                <div className="space-y-3">
                   {mockWords.slice(0, displayLimit).map((word) => (
-                    <WordCard
-                      key={word.id}
-                      word={word.nzebi_word}
-                      translation={word.french_word}
-                      partOfSpeech={word.part_of_speech}
-                      onClick={() => handleWordClick(word.id)}
-                    />
+                    <WordAccordionItem key={word.id} word={word} />
                   ))}
                 </div>
                 {/* Observateur pour le chargement progressif */}
@@ -400,15 +375,9 @@ const Index = () => {
                   Découvrez les {featuredWords.length} mots sélectionnés pour aujourd'hui
                 </p>
               </div>
-              <div className="space-y-4">
+              <div className="space-y-3">
                 {featuredWords.map((word) => (
-                  <WordCard
-                    key={word.id}
-                    word={word.nzebi_word}
-                    translation={word.french_word}
-                    partOfSpeech={word.part_of_speech}
-                    onClick={() => handleWordClick(word.id)}
-                  />
+                  <WordAccordionItem key={word.id} word={word} />
                 ))}
               </div>
             </div>
