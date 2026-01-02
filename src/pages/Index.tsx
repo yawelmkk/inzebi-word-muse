@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef, useMemo } from "react";
 import { SearchBar } from "@/components/SearchBar";
 import { WordAccordionItem } from "@/components/WordAccordionItem";
+import { CategoryFilter } from "@/components/CategoryFilter";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { mockWords } from "@/data/mockWords";
 import { Sparkles, BookOpen, MoreVertical, Info, Mail, Link, MessageCircle, Facebook, Youtube } from "lucide-react";
@@ -26,6 +27,7 @@ const Index = () => {
   const parsedState = savedState ? JSON.parse(savedState) : null;
   
   const [searchQuery, setSearchQuery] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState("");
   const [displayLimit, setDisplayLimit] = useState(parsedState?.displayLimit || 50);
   const [isContactDialogOpen, setIsContactDialogOpen] = useState(false);
   const [isLinksDialogOpen, setIsLinksDialogOpen] = useState(false);
@@ -70,11 +72,17 @@ const Index = () => {
     };
   }, [displayLimit]);
 
-  const filteredWords = mockWords.filter(
-    (word) =>
+  // Filter by search query and category
+  const filteredWords = mockWords.filter((word) => {
+    const matchesSearch =
       word.nzebi_word.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      word.french_word.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+      word.french_word.toLowerCase().includes(searchQuery.toLowerCase());
+    
+    const matchesCategory = selectedCategory === "" || 
+      word.part_of_speech.toLowerCase().includes(selectedCategory.toLowerCase());
+    
+    return matchesSearch && matchesCategory;
+  });
 
   // Sélectionner 5 mots différents chaque jour (mémorisé pour éviter les recalculs)
   const featuredWords = useMemo(() => {
@@ -308,12 +316,16 @@ const Index = () => {
 
           {/* Dictionary Tab */}
           <TabsContent value="dictionary" className="mt-0">
-            {/* Search Bar */}
-            <div className="sticky top-0 z-20 bg-background pb-6 pt-0">
+            {/* Search Bar and Filters */}
+            <div className="sticky top-0 z-20 bg-background pb-4 pt-0 space-y-4">
               <SearchBar
                 value={searchQuery}
                 onChange={setSearchQuery}
                 placeholder="Rechercher un mot en Inzébi ou en Français..."
+              />
+              <CategoryFilter
+                selectedCategory={selectedCategory}
+                onCategoryChange={setSelectedCategory}
               />
             </div>
 
