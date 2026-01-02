@@ -49,12 +49,53 @@ const Index = () => {
     }
   }, []);
 
+  // Filter by search query and category
+  const filteredWords = mockWords.filter((word) => {
+    const matchesSearch =
+      word.nzebi_word.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      word.french_word.toLowerCase().includes(searchQuery.toLowerCase());
+
+    if (selectedCategory === "") {
+      return matchesSearch;
+    }
+
+    const partOfSpeech = word.part_of_speech.toLowerCase();
+    const category = selectedCategory.toLowerCase();
+
+    // Handle special cases for exact matching vs partial matching
+    let matchesCategory = false;
+
+    if (category === "pronom personnel") {
+      // Exact match for "pronom personnel"
+      matchesCategory = partOfSpeech === "pronom personnel";
+    } else if (category === "pronom") {
+      // Match any pronom except "pronom personnel" (which has its own filter)
+      matchesCategory = partOfSpeech.includes("pronom") && partOfSpeech !== "pronom personnel";
+    } else if (category === "nom commun") {
+      matchesCategory = partOfSpeech === "nom commun" || partOfSpeech.startsWith("nom commun");
+    } else if (category === "nom propre") {
+      matchesCategory = partOfSpeech === "nom propre" || partOfSpeech.startsWith("nom propre");
+    } else {
+      // For other categories, use includes for partial matching
+      matchesCategory = partOfSpeech.includes(category) || partOfSpeech.startsWith(category);
+    }
+
+    return matchesSearch && matchesCategory;
+  });
+
+  // Reset pagination when filters change
+  useEffect(() => {
+    setDisplayLimit(50);
+  }, [searchQuery, selectedCategory]);
+
   // Infinite scroll pour charger plus de mots
   useEffect(() => {
+    const total = filteredWords.length;
+
     const observer = new IntersectionObserver(
       (entries) => {
-        if (entries[0].isIntersecting && displayLimit < mockWords.length) {
-          setDisplayLimit((prev) => Math.min(prev + 50, mockWords.length));
+        if (entries[0].isIntersecting && displayLimit < total) {
+          setDisplayLimit((prev) => Math.min(prev + 50, total));
         }
       },
       { threshold: 0.1 }
@@ -70,41 +111,7 @@ const Index = () => {
         observer.unobserve(currentTarget);
       }
     };
-  }, [displayLimit]);
-
-  // Filter by search query and category
-  const filteredWords = mockWords.filter((word) => {
-    const matchesSearch =
-      word.nzebi_word.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      word.french_word.toLowerCase().includes(searchQuery.toLowerCase());
-    
-    if (selectedCategory === "") {
-      return matchesSearch;
-    }
-    
-    const partOfSpeech = word.part_of_speech.toLowerCase();
-    const category = selectedCategory.toLowerCase();
-    
-    // Handle special cases for exact matching vs partial matching
-    let matchesCategory = false;
-    
-    if (category === "pronom personnel") {
-      // Exact match for "pronom personnel"
-      matchesCategory = partOfSpeech === "pronom personnel";
-    } else if (category === "pronom") {
-      // Match any pronom except "pronom personnel" (which has its own filter)
-      matchesCategory = partOfSpeech.includes("pronom") && partOfSpeech !== "pronom personnel";
-    } else if (category === "nom commun") {
-      matchesCategory = partOfSpeech === "nom commun" || partOfSpeech.startsWith("nom commun");
-    } else if (category === "nom propre") {
-      matchesCategory = partOfSpeech === "nom propre" || partOfSpeech.startsWith("nom propre");
-    } else {
-      // For other categories, use includes for partial matching
-      matchesCategory = partOfSpeech.includes(category) || partOfSpeech.startsWith(category);
-    }
-    
-    return matchesSearch && matchesCategory;
-  });
+  }, [displayLimit, filteredWords.length]);
 
   // Sélectionner 5 mots différents chaque jour (mémorisé pour éviter les recalculs)
   const featuredWords = useMemo(() => {
@@ -351,50 +358,37 @@ const Index = () => {
               />
             </div>
 
-            {/* Search Results */}
-            {searchQuery && (
-              <div className="animate-fade-in">
-                <h2 className="text-xl font-semibold text-foreground mb-4">
-                  {filteredWords.length} résultat{filteredWords.length > 1 ? "s" : ""}
-                </h2>
-                <div className="space-y-3">
-                  {filteredWords.length > 0 ? (
-                    filteredWords.map((word) => (
-                      <WordAccordionItem key={word.id} word={word} />
-                    ))
-                  ) : (
-                    <div className="text-center py-12">
-                      <p className="text-muted-foreground text-lg">
-                        Aucun mot trouvé pour "{searchQuery}"
-                      </p>
-                    </div>
-                  )}
-                </div>
-              </div>
-            )}
+            {/* Results */}
+            <div className="animate-fade-in">
+              <h2 className="text-xl font-semibold text-foreground mb-4">
+                {filteredWords.length} mot{filteredWords.length > 1 ? "s" : ""}
+              </h2>
 
-            {/* All Words Section */}
-            {!searchQuery && (
-              <div className="animate-fade-in">
-                <h2 className="text-xl font-semibold text-foreground mb-4">
-                  Tous les mots
-                </h2>
-                <div className="space-y-3">
-                  {mockWords.slice(0, displayLimit).map((word) => (
+              <div className="space-y-3">
+                {filteredWords.length > 0 ? (
+                  filteredWords.slice(0, displayLimit).map((word) => (
                     <WordAccordionItem key={word.id} word={word} />
-                  ))}
-                </div>
-                {/* Observateur pour le chargement progressif */}
-                {displayLimit < mockWords.length && (
-                  <div ref={observerTarget} className="py-8 text-center">
-                    <div className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-primary border-r-transparent"></div>
-                    <p className="mt-2 text-sm text-muted-foreground">
-                      Chargement... ({displayLimit}/{mockWords.length})
+                  ))
+                ) : (
+                  <div className="text-center py-12">
+                    <p className="text-muted-foreground text-lg">
+                      Aucun mot trouvé
+                      {searchQuery ? ` pour "${searchQuery}"` : ""}
                     </p>
                   </div>
                 )}
               </div>
-            )}
+
+              {/* Observateur pour le chargement progressif */}
+              {filteredWords.length > 0 && displayLimit < filteredWords.length && (
+                <div ref={observerTarget} className="py-8 text-center">
+                  <div className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-primary border-r-transparent"></div>
+                  <p className="mt-2 text-sm text-muted-foreground">
+                    Chargement... ({Math.min(displayLimit, filteredWords.length)}/{filteredWords.length})
+                  </p>
+                </div>
+              )}
+            </div>
           </TabsContent>
 
           {/* Word of the Day Tab */}
