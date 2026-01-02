@@ -78,8 +78,30 @@ const Index = () => {
       word.nzebi_word.toLowerCase().includes(searchQuery.toLowerCase()) ||
       word.french_word.toLowerCase().includes(searchQuery.toLowerCase());
     
-    const matchesCategory = selectedCategory === "" || 
-      word.part_of_speech.toLowerCase().includes(selectedCategory.toLowerCase());
+    if (selectedCategory === "") {
+      return matchesSearch;
+    }
+    
+    const partOfSpeech = word.part_of_speech.toLowerCase();
+    const category = selectedCategory.toLowerCase();
+    
+    // Handle special cases for exact matching vs partial matching
+    let matchesCategory = false;
+    
+    if (category === "pronom personnel") {
+      // Exact match for "pronom personnel"
+      matchesCategory = partOfSpeech === "pronom personnel";
+    } else if (category === "pronom") {
+      // Match any pronom except "pronom personnel" (which has its own filter)
+      matchesCategory = partOfSpeech.includes("pronom") && partOfSpeech !== "pronom personnel";
+    } else if (category === "nom commun") {
+      matchesCategory = partOfSpeech === "nom commun" || partOfSpeech.startsWith("nom commun");
+    } else if (category === "nom propre") {
+      matchesCategory = partOfSpeech === "nom propre" || partOfSpeech.startsWith("nom propre");
+    } else {
+      // For other categories, use includes for partial matching
+      matchesCategory = partOfSpeech.includes(category) || partOfSpeech.startsWith(category);
+    }
     
     return matchesSearch && matchesCategory;
   });

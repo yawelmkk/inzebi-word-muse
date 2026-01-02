@@ -4,20 +4,20 @@ import { cn } from "@/lib/utils";
 const CATEGORIES = [
   { value: "", label: "Tous" },
   { value: "verbe", label: "Verbe" },
-  { value: "pronom personnel", label: "Pronom Personnel" },
-  { value: "pronom", label: "Pronom" },
+  { value: "nom commun", label: "Nom Commun" },
+  { value: "nom propre", label: "Nom Propre" },
   { value: "adjectif", label: "Adjectif" },
   { value: "adverbe", label: "Adverbe" },
-  { value: "assertion", label: "Assertion" },
+  { value: "pronom personnel", label: "Pronom Personnel" },
+  { value: "pronom", label: "Pronom" },
+  { value: "interjection", label: "Interjection" },
+  { value: "préposition", label: "Préposition" },
   { value: "conjonction", label: "Conjonction" },
   { value: "article", label: "Article" },
   { value: "déterminant", label: "Déterminant" },
-  { value: "interjection", label: "Interjection" },
-  { value: "locution prépositive", label: "Locution Prépositive" },
+  { value: "assertion", label: "Assertion" },
   { value: "négation", label: "Négation" },
-  { value: "nom propre", label: "Nom Propre" },
-  { value: "nom commun", label: "Nom Commun" },
-  { value: "préposition", label: "Préposition" },
+  { value: "locution", label: "Locution" },
 ];
 
 interface CategoryFilterProps {
