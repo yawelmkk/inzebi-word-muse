@@ -13,4 +13,4 @@ Allow: /
 User-agent: *
 Allow: /
 
-Sitemap: https://dictionnaire-inzebi.lovable.app/sitemap.xml
+Sitemap: https://yawelmkk.github.io/inzebi-word-muse/sitemap.xml
