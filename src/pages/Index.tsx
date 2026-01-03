@@ -365,10 +365,6 @@ const Index = () => {
 
             {/* Results */}
             <div className="animate-fade-in">
-              <h2 className="text-xl font-semibold text-foreground mb-4">
-                {filteredWords.length} mot{filteredWords.length > 1 ? "s" : ""}
-              </h2>
-
               <div className="space-y-3">
                 {filteredWords.length > 0 ? (
                   filteredWords.slice(0, displayLimit).map((word) => (
