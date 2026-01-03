@@ -49,44 +49,49 @@ const Index = () => {
     }
   }, []);
 
-  // Filter by search query and category
-  const filteredWords = mockWords.filter((word) => {
-    const matchesSearch =
-      word.nzebi_word.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      word.french_word.toLowerCase().includes(searchQuery.toLowerCase());
+  // Filtrer par recherche + catégorie (mémoïsé pour éviter les gels UI)
+  const filteredWords = useMemo(() => {
+    const q = searchQuery.trim().toLowerCase();
+    const category = selectedCategory.trim().toLowerCase();
 
-    if (selectedCategory === "") {
-      return matchesSearch;
-    }
+    return mockWords.filter((word) => {
+      const nz = word.nzebi_word.toLowerCase();
+      const fr = word.french_word.toLowerCase();
 
-    const partOfSpeech = word.part_of_speech.toLowerCase();
-    const category = selectedCategory.toLowerCase();
+      const matchesSearch = q === "" || nz.includes(q) || fr.includes(q);
+      if (!matchesSearch) return false;
 
-    // Handle special cases for exact matching vs partial matching
-    let matchesCategory = false;
+      if (category === "") return true;
 
-    if (category === "pronom personnel") {
-      // Exact match for "pronom personnel"
-      matchesCategory = partOfSpeech === "pronom personnel";
-    } else if (category === "pronom") {
-      // Match any pronom except "pronom personnel" (which has its own filter)
-      matchesCategory = partOfSpeech.includes("pronom") && partOfSpeech !== "pronom personnel";
-    } else if (category === "nom commun") {
-      matchesCategory = partOfSpeech === "nom commun" || partOfSpeech.startsWith("nom commun");
-    } else if (category === "nom propre") {
-      matchesCategory = partOfSpeech === "nom propre" || partOfSpeech.startsWith("nom propre");
-    } else {
-      // For other categories, use includes for partial matching
-      matchesCategory = partOfSpeech.includes(category) || partOfSpeech.startsWith(category);
-    }
+      const partOfSpeech = word.part_of_speech.toLowerCase();
 
-    return matchesSearch && matchesCategory;
-  });
+      // Cas spéciaux (évite les collisions entre catégories)
+      if (category === "pronom personnel") {
+        return partOfSpeech === "pronom personnel";
+      }
+      if (category === "pronom") {
+        return partOfSpeech.includes("pronom") && partOfSpeech !== "pronom personnel";
+      }
+      if (category === "nom commun") {
+        return partOfSpeech === "nom commun" || partOfSpeech.startsWith("nom commun");
+      }
+      if (category === "nom propre") {
+        return partOfSpeech === "nom propre" || partOfSpeech.startsWith("nom propre");
+      }
+
+      return partOfSpeech.includes(category) || partOfSpeech.startsWith(category);
+    });
+  }, [searchQuery, selectedCategory]);
 
   // Reset pagination when filters change
   useEffect(() => {
+    console.log("[Index] filters", {
+      searchQuery,
+      selectedCategory,
+      results: filteredWords.length,
+    });
     setDisplayLimit(50);
-  }, [searchQuery, selectedCategory]);
+  }, [searchQuery, selectedCategory, filteredWords.length]);
 
   // Infinite scroll pour charger plus de mots
   useEffect(() => {

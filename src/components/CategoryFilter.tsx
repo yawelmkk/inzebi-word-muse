@@ -26,13 +26,22 @@ interface CategoryFilterProps {
 }
 
 export const CategoryFilter = ({ selectedCategory, onCategoryChange }: CategoryFilterProps) => {
+  const handleSelect = (value: string) => {
+    // Toggle: si on reclique la même catégorie, on revient à "Tous"
+    const next = selectedCategory === value ? "" : value;
+    console.log("[CategoryFilter] select", { value, next });
+    onCategoryChange(next);
+  };
+
   return (
     <ScrollArea className="w-full whitespace-nowrap">
       <div className="flex gap-2 pb-3">
         {CATEGORIES.map((category) => (
           <button
             key={category.value}
-            onClick={() => onCategoryChange(category.value)}
+            type="button"
+            onClick={() => handleSelect(category.value)}
+            aria-pressed={selectedCategory === category.value}
             className={cn(
               "inline-flex items-center px-4 py-2 rounded-full text-sm font-medium transition-all duration-200 shrink-0",
               "border-2 hover:scale-105",
