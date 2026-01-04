@@ -1,10 +1,11 @@
 import { useState, useEffect, useRef, useMemo } from "react";
+import { Link as RouterLink } from "react-router-dom";
 import { SearchBar } from "@/components/SearchBar";
 import { WordAccordionItem } from "@/components/WordAccordionItem";
 import { CategoryFilter } from "@/components/CategoryFilter";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { mockWords } from "@/data/mockWords";
-import { Sparkles, BookOpen, MoreVertical, Info, Mail, Link, MessageCircle, Facebook, Youtube } from "lucide-react";
+import { Sparkles, BookOpen, MoreVertical, Info, Mail, Link, MessageCircle, Facebook, Youtube, Gamepad2 } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -337,7 +338,7 @@ const Index = () => {
       {/* Tabs Navigation */}
       <div className="max-w-4xl mx-auto px-4 pt-6">
         <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-          <TabsList className="grid w-full grid-cols-2 mb-6">
+          <TabsList className="grid w-full grid-cols-3 mb-6">
             <TabsTrigger value="dictionary" className="flex items-center gap-2">
               <BookOpen className="h-4 w-4" />
               Dictionnaire
@@ -345,6 +346,10 @@ const Index = () => {
             <TabsTrigger value="wordofday" className="flex items-center gap-2">
               <Sparkles className="h-4 w-4" />
               Mots du jour
+            </TabsTrigger>
+            <TabsTrigger value="games" className="flex items-center gap-2">
+              <Gamepad2 className="h-4 w-4" />
+              Jeux
             </TabsTrigger>
           </TabsList>
 
@@ -408,6 +413,43 @@ const Index = () => {
                 {featuredWords.map((word) => (
                   <WordAccordionItem key={word.id} word={word} />
                 ))}
+              </div>
+            </div>
+          </TabsContent>
+
+          {/* Games Tab */}
+          <TabsContent value="games" className="mt-0">
+            <div className="animate-fade-in">
+              <div className="mb-6">
+                <h2 className="text-2xl font-bold text-foreground flex items-center gap-2">
+                  <Gamepad2 className="h-6 w-6 text-primary" />
+                  Jeux d'apprentissage
+                </h2>
+                <p className="text-muted-foreground mt-2">
+                  Apprenez le Nzébi de manière ludique
+                </p>
+              </div>
+              <div className="space-y-4">
+                <RouterLink to="/quiz" className="block">
+                  <div className="rounded-lg border bg-card text-card-foreground shadow-soft p-6 hover:border-primary/50 hover:shadow-md transition-all duration-200 cursor-pointer">
+                    <div className="flex items-start gap-4">
+                      <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0">
+                        <BookOpen className="w-6 h-6 text-primary" />
+                      </div>
+                      <div className="flex-1">
+                        <h3 className="font-semibold text-lg text-foreground mb-1">
+                          Quiz de vocabulaire
+                        </h3>
+                        <p className="text-sm text-muted-foreground mb-3">
+                          Testez vos connaissances en traduisant des mots Nzébi en français. 10 questions aléatoires à chaque partie.
+                        </p>
+                        <span className="inline-flex items-center text-sm font-medium text-primary">
+                          Jouer maintenant →
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                </RouterLink>
               </div>
             </div>
           </TabsContent>
