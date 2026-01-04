@@ -5,7 +5,7 @@ import { WordAccordionItem } from "@/components/WordAccordionItem";
 import { CategoryFilter } from "@/components/CategoryFilter";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { mockWords } from "@/data/mockWords";
-import { Sparkles, BookOpen, MoreVertical, Info, Mail, Link, MessageCircle, Facebook, Youtube, Gamepad2 } from "lucide-react";
+import { Sparkles, BookOpen, MoreVertical, Info, Mail, Link, MessageCircle, Facebook, Youtube, Gamepad2, PenLine } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -442,6 +442,27 @@ const Index = () => {
                         </h3>
                         <p className="text-sm text-muted-foreground mb-3">
                           Testez vos connaissances en traduisant des mots Nzébi en français. 10 questions aléatoires à chaque partie.
+                        </p>
+                        <span className="inline-flex items-center text-sm font-medium text-primary">
+                          Jouer maintenant →
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                </RouterLink>
+
+                <RouterLink to="/hangman" className="block">
+                  <div className="rounded-lg border bg-card text-card-foreground shadow-soft p-6 hover:border-primary/50 hover:shadow-md transition-all duration-200 cursor-pointer">
+                    <div className="flex items-start gap-4">
+                      <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0">
+                        <PenLine className="w-6 h-6 text-primary" />
+                      </div>
+                      <div className="flex-1">
+                        <h3 className="font-semibold text-lg text-foreground mb-1">
+                          Jeu du Pendu
+                        </h3>
+                        <p className="text-sm text-muted-foreground mb-3">
+                          Devinez le mot Nzébi lettre par lettre. Attention, vous n'avez droit qu'à 7 erreurs !
                         </p>
                         <span className="inline-flex items-center text-sm font-medium text-primary">
                           Jouer maintenant →

@@ -6,6 +6,7 @@ import { ThemeProvider } from "next-themes";
 import Index from "./pages/Index";
 import WordDetail from "./pages/WordDetail";
 import Quiz from "./pages/Quiz";
+import Hangman from "./pages/Hangman";
 import NotFound from "./pages/NotFound";
 
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
@@ -26,6 +27,7 @@ const App = () => {
               <Route path="/" element={<Index />} />
               <Route path="/word/:id" element={<WordDetail />} />
               <Route path="/quiz" element={<Quiz />} />
+              <Route path="/hangman" element={<Hangman />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
           </TooltipProvider>
