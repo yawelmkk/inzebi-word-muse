@@ -5,6 +5,7 @@ import { ThemeProvider } from "next-themes";
 
 import Index from "./pages/Index";
 import WordDetail from "./pages/WordDetail";
+import Quiz from "./pages/Quiz";
 import NotFound from "./pages/NotFound";
 
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
@@ -21,11 +22,12 @@ const App = () => {
             <Toaster />
             {/* Le composant Sonner est supprimé pour le build */}
 
-            <Routes>
-              <Route path="/" element={<Index />} />
-              <Route path="/word/:id" element={<WordDetail />} />
-              <Route path="*" element={<NotFound />} />
-            </Routes>
+            <Routes>
+              <Route path="/" element={<Index />} />
+              <Route path="/word/:id" element={<WordDetail />} />
+              <Route path="/quiz" element={<Quiz />} />
+              <Route path="*" element={<NotFound />} />
+            </Routes>
           </TooltipProvider>
         </BrowserRouter>
       </ThemeProvider>
