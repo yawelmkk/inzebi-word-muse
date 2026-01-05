@@ -7,6 +7,7 @@ import Index from "./pages/Index";
 import WordDetail from "./pages/WordDetail";
 import Quiz from "./pages/Quiz";
 import Hangman from "./pages/Hangman";
+import Memory from "./pages/Memory";
 import NotFound from "./pages/NotFound";
 
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
@@ -28,6 +29,7 @@ const App = () => {
               <Route path="/word/:id" element={<WordDetail />} />
               <Route path="/quiz" element={<Quiz />} />
               <Route path="/hangman" element={<Hangman />} />
+              <Route path="/memory" element={<Memory />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
           </TooltipProvider>
