@@ -5,7 +5,7 @@ import { WordAccordionItem } from "@/components/WordAccordionItem";
 import { CategoryFilter } from "@/components/CategoryFilter";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { mockWords } from "@/data/mockWords";
-import { Sparkles, BookOpen, MoreVertical, Info, Mail, Link, MessageCircle, Facebook, Youtube, Gamepad2, PenLine, Grid3X3 } from "lucide-react";
+import { Sparkles, BookOpen, MoreVertical, Info, Mail, Link, MessageCircle, Facebook, Youtube, Gamepad2, PenLine, Grid3X3, Zap } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -484,6 +484,27 @@ const Index = () => {
                         </h3>
                         <p className="text-sm text-muted-foreground mb-3">
                           Associez les mots Nzébi à leur traduction française. Entraînez votre mémoire !
+                        </p>
+                        <span className="inline-flex items-center text-sm font-medium text-primary">
+                          Jouer maintenant →
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                </RouterLink>
+
+                <RouterLink to="/sprint" className="block">
+                  <div className="rounded-lg border bg-card text-card-foreground shadow-soft p-6 hover:border-primary/50 hover:shadow-md transition-all duration-200 cursor-pointer">
+                    <div className="flex items-start gap-4">
+                      <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0">
+                        <Zap className="w-6 h-6 text-primary" />
+                      </div>
+                      <div className="flex-1">
+                        <h3 className="font-semibold text-lg text-foreground mb-1">
+                          Sprint des Mots
+                        </h3>
+                        <p className="text-sm text-muted-foreground mb-3">
+                          Les mots tombent ! Cliquez sur la bonne traduction avant qu'elle ne disparaisse.
                         </p>
                         <span className="inline-flex items-center text-sm font-medium text-primary">
                           Jouer maintenant →
