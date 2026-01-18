@@ -151,7 +151,7 @@ const Index = () => {
             <div className="flex items-center gap-3 flex-1 justify-center">
               <BookOpen className="h-8 w-8 text-primary-foreground" />
               <h1 className="text-3xl md:text-4xl font-bold text-primary-foreground text-center">
-                Inzèbi
+                inzèbi
               </h1>
             </div>
             <div className="flex items-center gap-1">
