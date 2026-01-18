@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Heart, ChevronDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -6,11 +6,58 @@ import { Word } from "@/data/mockWords";
 
 interface WordAccordionItemProps {
   word: Word;
+  onFavoriteChange?: (wordId: string, isFavorite: boolean) => void;
 }
 
-export const WordAccordionItem = ({ word }: WordAccordionItemProps) => {
+// Helper functions for favorites management
+export const getFavorites = (): string[] => {
+  const stored = localStorage.getItem('favoriteWords');
+  return stored ? JSON.parse(stored) : [];
+};
+
+export const setFavorites = (favorites: string[]) => {
+  localStorage.setItem('favoriteWords', JSON.stringify(favorites));
+  // Dispatch custom event to notify other components
+  window.dispatchEvent(new CustomEvent('favoritesChanged', { detail: favorites }));
+};
+
+export const WordAccordionItem = ({ word, onFavoriteChange }: WordAccordionItemProps) => {
   const [isOpen, setIsOpen] = useState(false);
   const [isFavorite, setIsFavorite] = useState(false);
+
+  // Load favorite state from localStorage
+  useEffect(() => {
+    const favorites = getFavorites();
+    setIsFavorite(favorites.includes(word.id));
+  }, [word.id]);
+
+  // Listen for favorites changes from other components
+  useEffect(() => {
+    const handleFavoritesChanged = (e: CustomEvent<string[]>) => {
+      setIsFavorite(e.detail.includes(word.id));
+    };
+    
+    window.addEventListener('favoritesChanged', handleFavoritesChanged as EventListener);
+    return () => {
+      window.removeEventListener('favoritesChanged', handleFavoritesChanged as EventListener);
+    };
+  }, [word.id]);
+
+  const toggleFavorite = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    const favorites = getFavorites();
+    let newFavorites: string[];
+    
+    if (isFavorite) {
+      newFavorites = favorites.filter(id => id !== word.id);
+    } else {
+      newFavorites = [...favorites, word.id];
+    }
+    
+    setFavorites(newFavorites);
+    setIsFavorite(!isFavorite);
+    onFavoriteChange?.(word.id, !isFavorite);
+  };
 
   return (
     <div className="border-2 rounded-lg overflow-hidden animate-fade-in bg-card">
@@ -34,10 +81,7 @@ export const WordAccordionItem = ({ word }: WordAccordionItemProps) => {
           <Button
             variant="ghost"
             size="icon"
-            onClick={(e) => {
-              e.stopPropagation();
-              setIsFavorite(!isFavorite);
-            }}
+            onClick={toggleFavorite}
             className="hover:scale-110 transition-transform"
           >
             <Heart className={isFavorite ? "fill-primary text-primary" : "text-muted-foreground"} />
