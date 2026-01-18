@@ -1,11 +1,11 @@
 import { useState, useEffect, useRef, useMemo } from "react";
 import { Link as RouterLink } from "react-router-dom";
 import { SearchBar } from "@/components/SearchBar";
-import { WordAccordionItem } from "@/components/WordAccordionItem";
+import { WordAccordionItem, getFavorites } from "@/components/WordAccordionItem";
 import { CategoryFilter } from "@/components/CategoryFilter";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { mockWords } from "@/data/mockWords";
-import { Sparkles, BookOpen, MoreVertical, Info, Mail, Link, MessageCircle, Facebook, Youtube, Gamepad2, PenLine, Grid3X3, Zap } from "lucide-react";
+import { Sparkles, BookOpen, MoreVertical, Info, Mail, Link, MessageCircle, Facebook, Youtube, Gamepad2, PenLine, Grid3X3, Zap, Heart } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -34,8 +34,23 @@ const Index = () => {
   const [isLinksDialogOpen, setIsLinksDialogOpen] = useState(false);
   const [isAboutDialogOpen, setIsAboutDialogOpen] = useState(false);
   const [activeTab, setActiveTab] = useState(parsedState?.activeTab || "dictionary");
+  const [favoriteIds, setFavoriteIds] = useState<string[]>([]);
   const observerTarget = useRef<HTMLDivElement>(null);
   const hasRestoredScroll = useRef(false);
+
+  // Load favorites from localStorage
+  useEffect(() => {
+    setFavoriteIds(getFavorites());
+    
+    const handleFavoritesChanged = (e: CustomEvent<string[]>) => {
+      setFavoriteIds(e.detail);
+    };
+    
+    window.addEventListener('favoritesChanged', handleFavoritesChanged as EventListener);
+    return () => {
+      window.removeEventListener('favoritesChanged', handleFavoritesChanged as EventListener);
+    };
+  }, []);
 
   // Restaurer la position de scroll après le premier rendu
   useEffect(() => {
@@ -338,18 +353,26 @@ const Index = () => {
       {/* Tabs Navigation */}
       <div className="max-w-4xl mx-auto px-4 pt-6">
         <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-          <TabsList className="grid w-full grid-cols-3 mb-6">
-            <TabsTrigger value="dictionary" className="flex items-center gap-2">
+          <TabsList className="grid w-full grid-cols-4 mb-6">
+            <TabsTrigger value="dictionary" className="flex items-center gap-1 text-xs sm:text-sm sm:gap-2">
               <BookOpen className="h-4 w-4" />
-              Dictionnaire
+              <span className="hidden sm:inline">Dictionnaire</span>
+              <span className="sm:hidden">Dico</span>
             </TabsTrigger>
-            <TabsTrigger value="wordofday" className="flex items-center gap-2">
+            <TabsTrigger value="wordofday" className="flex items-center gap-1 text-xs sm:text-sm sm:gap-2">
               <Sparkles className="h-4 w-4" />
-              Mots du jour
+              <span className="hidden sm:inline">Mots du jour</span>
+              <span className="sm:hidden">Jour</span>
             </TabsTrigger>
-            <TabsTrigger value="games" className="flex items-center gap-2">
+            <TabsTrigger value="favorites" className="flex items-center gap-1 text-xs sm:text-sm sm:gap-2">
+              <Heart className="h-4 w-4" />
+              <span className="hidden sm:inline">Mes mots</span>
+              <span className="sm:hidden">Favoris</span>
+            </TabsTrigger>
+            <TabsTrigger value="games" className="flex items-center gap-1 text-xs sm:text-sm sm:gap-2">
               <Gamepad2 className="h-4 w-4" />
-              Jeux
+              <span className="hidden sm:inline">Jeux</span>
+              <span className="sm:hidden">Jeux</span>
             </TabsTrigger>
           </TabsList>
 
@@ -413,6 +436,40 @@ const Index = () => {
                 {featuredWords.map((word) => (
                   <WordAccordionItem key={word.id} word={word} />
                 ))}
+              </div>
+            </div>
+          </TabsContent>
+
+          {/* Favorites Tab */}
+          <TabsContent value="favorites" className="mt-0">
+            <div className="animate-fade-in">
+              <div className="mb-6">
+                <h2 className="text-2xl font-bold text-foreground flex items-center gap-2">
+                  <Heart className="h-6 w-6 text-primary" />
+                  Mes mots
+                </h2>
+                <p className="text-muted-foreground mt-2">
+                  Vos mots favoris sauvegardés ({favoriteIds.length} mot{favoriteIds.length > 1 ? 's' : ''})
+                </p>
+              </div>
+              <div className="space-y-3">
+                {favoriteIds.length > 0 ? (
+                  mockWords
+                    .filter(word => favoriteIds.includes(word.id))
+                    .map((word) => (
+                      <WordAccordionItem key={word.id} word={word} />
+                    ))
+                ) : (
+                  <div className="text-center py-12">
+                    <Heart className="h-16 w-16 mx-auto text-muted-foreground/30 mb-4" />
+                    <p className="text-muted-foreground text-lg mb-2">
+                      Aucun mot favori
+                    </p>
+                    <p className="text-muted-foreground text-sm">
+                      Cliquez sur le cœur à côté d'un mot pour l'ajouter à vos favoris
+                    </p>
+                  </div>
+                )}
               </div>
             </div>
           </TabsContent>
