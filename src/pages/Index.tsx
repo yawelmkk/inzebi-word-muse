@@ -353,7 +353,7 @@ const Index = () => {
       {/* Tabs Navigation */}
       <div className="max-w-4xl mx-auto px-4 pt-6">
         <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-          <TabsList className="grid w-full grid-cols-4 mb-6">
+          <TabsList className="grid w-full grid-cols-5 mb-6">
             <TabsTrigger value="dictionary" className="flex items-center gap-1 text-xs sm:text-sm sm:gap-2">
               <BookOpen className="h-4 w-4" />
               <span className="hidden sm:inline">Dictionnaire</span>
@@ -369,10 +369,15 @@ const Index = () => {
               <span className="hidden sm:inline">Mes mots</span>
               <span className="sm:hidden">Favoris</span>
             </TabsTrigger>
-            <TabsTrigger value="activities" className="flex items-center gap-1 text-xs sm:text-sm sm:gap-2">
+            <TabsTrigger value="games" className="flex items-center gap-1 text-xs sm:text-sm sm:gap-2">
               <Gamepad2 className="h-4 w-4" />
+              <span className="hidden sm:inline">Jeux</span>
+              <span className="sm:hidden">Jeux</span>
+            </TabsTrigger>
+            <TabsTrigger value="activities" className="flex items-center gap-1 text-xs sm:text-sm sm:gap-2">
+              <Zap className="h-4 w-4" />
               <span className="hidden sm:inline">Activités</span>
-              <span className="sm:hidden">Activités</span>
+              <span className="sm:hidden">Activ.</span>
             </TabsTrigger>
           </TabsList>
 
@@ -475,12 +480,12 @@ const Index = () => {
           </TabsContent>
 
           {/* Games Tab */}
-          <TabsContent value="activities" className="mt-0">
+          <TabsContent value="games" className="mt-0">
             <div className="animate-fade-in">
               <div className="mb-6">
                 <h2 className="text-2xl font-bold text-foreground flex items-center gap-2">
                   <Gamepad2 className="h-6 w-6 text-primary" />
-                  Activités
+                  Jeux d'apprentissage
                 </h2>
                 <p className="text-muted-foreground mt-2">
                   Apprenez le Nzébi de manière ludique
@@ -570,6 +575,27 @@ const Index = () => {
                     </div>
                   </div>
                 </RouterLink>
+              </div>
+            </div>
+          </TabsContent>
+
+          {/* Activities Tab */}
+          <TabsContent value="activities" className="mt-0">
+            <div className="animate-fade-in">
+              <div className="mb-6">
+                <h2 className="text-2xl font-bold text-foreground flex items-center gap-2">
+                  <Zap className="h-6 w-6 text-primary" />
+                  Activités
+                </h2>
+                <p className="text-muted-foreground mt-2">
+                  Exercices et activités pour pratiquer le Nzébi
+                </p>
+              </div>
+              <div className="text-center py-12">
+                <Zap className="h-12 w-12 text-muted-foreground/50 mx-auto mb-4" />
+                <p className="text-muted-foreground">
+                  De nouvelles activités arrivent bientôt !
+                </p>
               </div>
             </div>
           </TabsContent>
