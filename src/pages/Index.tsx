@@ -369,10 +369,10 @@ const Index = () => {
               <span className="hidden sm:inline">Mes mots</span>
               <span className="sm:hidden">Favoris</span>
             </TabsTrigger>
-            <TabsTrigger value="games" className="flex items-center gap-1 text-xs sm:text-sm sm:gap-2">
+            <TabsTrigger value="activities" className="flex items-center gap-1 text-xs sm:text-sm sm:gap-2">
               <Gamepad2 className="h-4 w-4" />
-              <span className="hidden sm:inline">Jeux</span>
-              <span className="sm:hidden">Jeux</span>
+              <span className="hidden sm:inline">Activités</span>
+              <span className="sm:hidden">Activités</span>
             </TabsTrigger>
           </TabsList>
 
@@ -475,12 +475,12 @@ const Index = () => {
           </TabsContent>
 
           {/* Games Tab */}
-          <TabsContent value="games" className="mt-0">
+          <TabsContent value="activities" className="mt-0">
             <div className="animate-fade-in">
               <div className="mb-6">
                 <h2 className="text-2xl font-bold text-foreground flex items-center gap-2">
                   <Gamepad2 className="h-6 w-6 text-primary" />
-                  Jeux d'apprentissage
+                  Activités
                 </h2>
                 <p className="text-muted-foreground mt-2">
                   Apprenez le Nzébi de manière ludique
