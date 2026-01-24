@@ -1,5 +1,5 @@
-import { useState, useEffect } from "react";
-import { Heart, ChevronDown } from "lucide-react";
+import { useState, useEffect, useRef } from "react";
+import { Heart, ChevronDown, Volume2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { Word } from "@/data/mockWords";
@@ -24,6 +24,34 @@ export const setFavorites = (favorites: string[]) => {
 export const WordAccordionItem = ({ word, onFavoriteChange }: WordAccordionItemProps) => {
   const [isOpen, setIsOpen] = useState(false);
   const [isFavorite, setIsFavorite] = useState(false);
+  const [isPlaying, setIsPlaying] = useState(false);
+  const audioRef = useRef<HTMLAudioElement | null>(null);
+
+  // Generate audio path from word
+  const audioPath = `/audio/${encodeURIComponent(word.nzebi_word)}.mp3`;
+
+  const playAudio = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    
+    if (audioRef.current) {
+      audioRef.current.pause();
+      audioRef.current.currentTime = 0;
+    }
+    
+    const audio = new Audio(audioPath);
+    audioRef.current = audio;
+    
+    audio.onplay = () => setIsPlaying(true);
+    audio.onended = () => setIsPlaying(false);
+    audio.onerror = () => {
+      setIsPlaying(false);
+      console.log(`Audio non disponible pour: ${word.nzebi_word}`);
+    };
+    
+    audio.play().catch(() => {
+      setIsPlaying(false);
+    });
+  };
 
   // Load favorite state from localStorage
   useEffect(() => {
@@ -78,6 +106,17 @@ export const WordAccordionItem = ({ word, onFavoriteChange }: WordAccordionItemP
           <p className="text-muted-foreground mt-1">{word.french_word}</p>
         </div>
         <div className="flex items-center gap-2">
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={playAudio}
+            className={cn(
+              "hover:scale-110 transition-transform",
+              isPlaying && "text-primary animate-pulse"
+            )}
+          >
+            <Volume2 className={isPlaying ? "text-primary" : "text-muted-foreground"} />
+          </Button>
           <Button
             variant="ghost"
             size="icon"
