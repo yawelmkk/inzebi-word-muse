@@ -30,16 +30,29 @@ export const WordAccordionItem = ({ word, onFavoriteChange }: WordAccordionItemP
   // Generate audio path from word
   const audioPath = `/audio/${encodeURIComponent(word.nzebi_word)}.mp3`;
 
-  const playAudio = (e: React.MouseEvent) => {
+  const playAudio = (e: React.MouseEvent | React.TouchEvent) => {
     e.stopPropagation();
+    e.preventDefault();
     
+    // Stop any currently playing audio
     if (audioRef.current) {
       audioRef.current.pause();
       audioRef.current.currentTime = 0;
     }
     
-    const audio = new Audio(audioPath);
+    // Create and configure audio - must be synchronous with user gesture for mobile
+    const audio = new Audio();
+    audio.preload = 'auto';
     audioRef.current = audio;
+    
+    // Set up event handlers before setting src
+    audio.onloadeddata = () => {
+      // Play immediately when data is loaded - still within user gesture context on most browsers
+      audio.play().catch((err) => {
+        console.log(`Erreur de lecture: ${err.message}`);
+        setIsPlaying(false);
+      });
+    };
     
     audio.onplay = () => setIsPlaying(true);
     audio.onended = () => setIsPlaying(false);
@@ -48,8 +61,13 @@ export const WordAccordionItem = ({ word, onFavoriteChange }: WordAccordionItemP
       console.log(`Audio non disponible pour: ${word.nzebi_word}`);
     };
     
+    // Set source and load - this triggers the loading
+    audio.src = audioPath;
+    audio.load();
+    
+    // Also try to play immediately for browsers that support it
     audio.play().catch(() => {
-      setIsPlaying(false);
+      // Silent catch - onloadeddata will handle playback
     });
   };
 
@@ -90,9 +108,12 @@ export const WordAccordionItem = ({ word, onFavoriteChange }: WordAccordionItemP
   return (
     <div className="border-2 rounded-lg overflow-hidden animate-fade-in bg-card">
       {/* Header - toujours visible */}
-      <button
+      <div
+        role="button"
+        tabIndex={0}
         onClick={() => setIsOpen(!isOpen)}
-        className="w-full p-4 flex items-center justify-between hover:bg-muted/50 transition-colors"
+        onKeyDown={(e) => e.key === 'Enter' && setIsOpen(!isOpen)}
+        className="w-full p-4 flex items-center justify-between hover:bg-muted/50 transition-colors cursor-pointer"
       >
         <div className="flex-1 text-left">
           <div className="flex items-center gap-2 flex-wrap">
@@ -110,6 +131,7 @@ export const WordAccordionItem = ({ word, onFavoriteChange }: WordAccordionItemP
             variant="ghost"
             size="icon"
             onClick={playAudio}
+            onTouchEnd={playAudio}
             className={cn(
               "hover:scale-110 transition-transform",
               isPlaying && "text-primary animate-pulse"
@@ -132,7 +154,7 @@ export const WordAccordionItem = ({ word, onFavoriteChange }: WordAccordionItemP
             )} 
           />
         </div>
-      </button>
+      </div>
 
       {/* Contenu expandable */}
       <div
