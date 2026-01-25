@@ -28,7 +28,10 @@ export const WordAccordionItem = ({ word, onFavoriteChange }: WordAccordionItemP
   const audioRef = useRef<HTMLAudioElement | null>(null);
 
   // Generate audio path from word
-  const audioPath = `/audio/${encodeURIComponent(word.nzebi_word)}.mp3`;
+  // Use BASE_URL so it works when the app is served from a sub-path (e.g. GitHub Pages)
+  const audioPath = `${import.meta.env.BASE_URL}audio/${encodeURIComponent(
+    word.nzebi_word
+  )}.mp3`;
 
   const playAudio = (e: React.MouseEvent | React.TouchEvent) => {
     e.stopPropagation();
