@@ -354,7 +354,7 @@ const Hangman = () => {
                 </div>
                 
                 {/* Special characters for Nzébi accents */}
-                <div className="flex flex-wrap justify-center gap-1.5 pt-2 border-t border-border">
+                <div className="flex justify-center gap-1 sm:gap-1.5 mt-1.5 pt-2 border-t border-border">
                   {SPECIAL_CHARS.map((letter) => {
                     const state = getLetterState(letter);
                     return (
@@ -363,7 +363,7 @@ const Hangman = () => {
                         onClick={() => handleGuess(letter)}
                         disabled={state !== "default"}
                         className={cn(
-                          "w-9 h-9 sm:w-10 sm:h-10 rounded-lg font-bold text-sm",
+                          "w-8 h-10 sm:w-10 sm:h-11 rounded-lg font-bold text-xs sm:text-sm",
                           "transition-all duration-200 transform active:scale-95",
                           "flex items-center justify-center",
                           state === "default" && "bg-secondary hover:bg-secondary/80 text-secondary-foreground hover:scale-105",
