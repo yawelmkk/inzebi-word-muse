@@ -21,11 +21,15 @@ import {
 } from "@/components/ui/dialog";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
+import { readStorageJson } from "@/lib/storage";
 
 const Index = () => {
-  // Restaurer l'état depuis sessionStorage
-  const savedState = sessionStorage.getItem('dictionaryState');
-  const parsedState = savedState ? JSON.parse(savedState) : null;
+  // Restaurer l'état depuis sessionStorage (avec fallback sûr en cas de JSON corrompu)
+  const parsedState = readStorageJson<{ displayLimit?: number; activeTab?: string; scrollPosition?: number } | null>(
+    "session",
+    "dictionaryState",
+    null
+  );
   
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("");
