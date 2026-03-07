@@ -9,8 +9,13 @@ import { ThemeToggle } from "@/components/ThemeToggle";
 import { cn } from "@/lib/utils";
 
 const MAX_ERRORS = 7;
-const ALPHABET = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
-const SPECIAL_CHARS = ["É", "È", "Ê", "Ë", "À", "Â", "Ô", "Î", "Ù", "Û", "Ç"];
+// AZERTY keyboard layout (like French phone keyboards)
+const AZERTY_ROWS = [
+  ["A", "Z", "E", "R", "T", "Y", "U", "I", "O", "P"],
+  ["Q", "S", "D", "F", "G", "H", "J", "K", "L", "M"],
+  ["W", "X", "C", "V", "B", "N"],
+];
+const SPECIAL_CHARS = ["É", "È", "Ê", "À", "Â", "Ô", "Î", "Ù", "Û", "Ç"];
 
 // Normalize text for comparison (remove accents)
 const normalizeChar = (char: string): string => {
