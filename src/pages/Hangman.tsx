@@ -9,8 +9,13 @@ import { ThemeToggle } from "@/components/ThemeToggle";
 import { cn } from "@/lib/utils";
 
 const MAX_ERRORS = 7;
-const ALPHABET = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
-const SPECIAL_CHARS = ["É", "È", "Ê", "Ë", "À", "Â", "Ô", "Î", "Ù", "Û", "Ç"];
+// AZERTY keyboard layout (like French phone keyboards)
+const AZERTY_ROWS = [
+  ["A", "Z", "E", "R", "T", "Y", "U", "I", "O", "P"],
+  ["Q", "S", "D", "F", "G", "H", "J", "K", "L", "M"],
+  ["W", "X", "C", "V", "B", "N"],
+];
+const SPECIAL_CHARS = ["É", "È", "Ê", "À", "Â", "Ô", "Î", "Ù", "Û", "Ç"];
 
 // Normalize text for comparison (remove accents)
 const normalizeChar = (char: string): string => {
@@ -316,36 +321,40 @@ const Hangman = () => {
             </Card>
           )}
 
-          {/* Keyboard */}
+          {/* AZERTY Keyboard */}
           {gameState === "playing" && (
             <Card className="shadow-soft">
-              <CardContent className="p-4">
-                {/* Main alphabet */}
-                <div className="grid grid-cols-7 sm:grid-cols-9 gap-1.5 mb-3">
-                  {ALPHABET.map((letter) => {
-                    const state = getLetterState(letter);
-                    return (
-                      <button
-                        key={letter}
-                        onClick={() => handleGuess(letter)}
-                        disabled={state !== "default"}
-                        className={cn(
-                          "aspect-square rounded-lg font-bold text-sm sm:text-base",
-                          "transition-all duration-200 transform active:scale-95",
-                          "flex items-center justify-center",
-                          state === "default" && "bg-secondary hover:bg-secondary/80 text-secondary-foreground hover:scale-105",
-                          state === "correct" && "bg-green-500 text-white cursor-default",
-                          state === "wrong" && "bg-red-500/20 text-red-500/50 cursor-default"
-                        )}
-                      >
-                        {letter}
-                      </button>
-                    );
-                  })}
+              <CardContent className="p-3 sm:p-4">
+                {/* AZERTY rows */}
+                <div className="space-y-1.5">
+                  {AZERTY_ROWS.map((row, rowIndex) => (
+                    <div key={rowIndex} className="flex justify-center gap-1 sm:gap-1.5">
+                      {row.map((letter) => {
+                        const state = getLetterState(letter);
+                        return (
+                          <button
+                            key={letter}
+                            onClick={() => handleGuess(letter)}
+                            disabled={state !== "default"}
+                            className={cn(
+                              "w-8 h-10 sm:w-10 sm:h-11 rounded-lg font-bold text-sm sm:text-base",
+                              "transition-all duration-200 transform active:scale-95",
+                              "flex items-center justify-center",
+                              state === "default" && "bg-secondary hover:bg-secondary/80 text-secondary-foreground hover:scale-105",
+                              state === "correct" && "bg-green-500 text-white cursor-default",
+                              state === "wrong" && "bg-red-500/20 text-red-500/50 cursor-default"
+                            )}
+                          >
+                            {letter}
+                          </button>
+                        );
+                      })}
+                    </div>
+                  ))}
                 </div>
                 
                 {/* Special characters for Nzébi accents */}
-                <div className="flex flex-wrap justify-center gap-1.5 pt-2 border-t border-border">
+                <div className="flex justify-center gap-1 sm:gap-1.5 mt-1.5 pt-2 border-t border-border">
                   {SPECIAL_CHARS.map((letter) => {
                     const state = getLetterState(letter);
                     return (
@@ -354,7 +363,7 @@ const Hangman = () => {
                         onClick={() => handleGuess(letter)}
                         disabled={state !== "default"}
                         className={cn(
-                          "w-9 h-9 sm:w-10 sm:h-10 rounded-lg font-bold text-sm",
+                          "w-8 h-10 sm:w-10 sm:h-11 rounded-lg font-bold text-xs sm:text-sm",
                           "transition-all duration-200 transform active:scale-95",
                           "flex items-center justify-center",
                           state === "default" && "bg-secondary hover:bg-secondary/80 text-secondary-foreground hover:scale-105",
