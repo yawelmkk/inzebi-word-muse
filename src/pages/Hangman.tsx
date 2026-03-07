@@ -321,32 +321,36 @@ const Hangman = () => {
             </Card>
           )}
 
-          {/* Keyboard */}
+          {/* AZERTY Keyboard */}
           {gameState === "playing" && (
             <Card className="shadow-soft">
-              <CardContent className="p-4">
-                {/* Main alphabet */}
-                <div className="grid grid-cols-7 sm:grid-cols-9 gap-1.5 mb-3">
-                  {ALPHABET.map((letter) => {
-                    const state = getLetterState(letter);
-                    return (
-                      <button
-                        key={letter}
-                        onClick={() => handleGuess(letter)}
-                        disabled={state !== "default"}
-                        className={cn(
-                          "aspect-square rounded-lg font-bold text-sm sm:text-base",
-                          "transition-all duration-200 transform active:scale-95",
-                          "flex items-center justify-center",
-                          state === "default" && "bg-secondary hover:bg-secondary/80 text-secondary-foreground hover:scale-105",
-                          state === "correct" && "bg-green-500 text-white cursor-default",
-                          state === "wrong" && "bg-red-500/20 text-red-500/50 cursor-default"
-                        )}
-                      >
-                        {letter}
-                      </button>
-                    );
-                  })}
+              <CardContent className="p-3 sm:p-4">
+                {/* AZERTY rows */}
+                <div className="space-y-1.5">
+                  {AZERTY_ROWS.map((row, rowIndex) => (
+                    <div key={rowIndex} className="flex justify-center gap-1 sm:gap-1.5">
+                      {row.map((letter) => {
+                        const state = getLetterState(letter);
+                        return (
+                          <button
+                            key={letter}
+                            onClick={() => handleGuess(letter)}
+                            disabled={state !== "default"}
+                            className={cn(
+                              "w-8 h-10 sm:w-10 sm:h-11 rounded-lg font-bold text-sm sm:text-base",
+                              "transition-all duration-200 transform active:scale-95",
+                              "flex items-center justify-center",
+                              state === "default" && "bg-secondary hover:bg-secondary/80 text-secondary-foreground hover:scale-105",
+                              state === "correct" && "bg-green-500 text-white cursor-default",
+                              state === "wrong" && "bg-red-500/20 text-red-500/50 cursor-default"
+                            )}
+                          >
+                            {letter}
+                          </button>
+                        );
+                      })}
+                    </div>
+                  ))}
                 </div>
                 
                 {/* Special characters for Nzébi accents */}
