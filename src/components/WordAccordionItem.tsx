@@ -3,6 +3,7 @@ import { Heart, ChevronDown, Volume2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { Word } from "@/data/mockWords";
+import { readStorageJson, writeStorageJson } from "@/lib/storage";
 
 interface WordAccordionItemProps {
   word: Word;
@@ -11,12 +12,14 @@ interface WordAccordionItemProps {
 
 // Helper functions for favorites management
 export const getFavorites = (): string[] => {
-  const stored = localStorage.getItem('favoriteWords');
-  return stored ? JSON.parse(stored) : [];
+  const favorites = readStorageJson<unknown>("local", "favoriteWords", []);
+  return Array.isArray(favorites)
+    ? favorites.filter((id): id is string => typeof id === "string")
+    : [];
 };
 
 export const setFavorites = (favorites: string[]) => {
-  localStorage.setItem('favoriteWords', JSON.stringify(favorites));
+  writeStorageJson("local", "favoriteWords", favorites);
   // Dispatch custom event to notify other components
   window.dispatchEvent(new CustomEvent('favoritesChanged', { detail: favorites }));
 };
