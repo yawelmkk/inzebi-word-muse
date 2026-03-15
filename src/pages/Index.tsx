@@ -117,7 +117,7 @@ const Index = () => {
       const keyB = displayMode === "french" ? b.french_word.toLowerCase() : b.nzebi_word.toLowerCase();
       return keyA.localeCompare(keyB, "fr");
     });
-  }, [searchQuery, selectedCategory]);
+  }, [searchQuery, selectedCategory, displayMode]);
 
   // Reset pagination when filters change
   useEffect(() => {
