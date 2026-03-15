@@ -479,7 +479,7 @@ const Index = () => {
                   mockWords
                     .filter(word => favoriteIds.includes(word.id))
                     .map((word) => (
-                      <WordAccordionItem key={word.id} word={word} />
+                      <WordAccordionItem key={word.id} word={word} displayMode={displayMode} />
                     ))
                 ) : (
                   <div className="text-center py-12">
