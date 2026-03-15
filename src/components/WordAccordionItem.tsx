@@ -7,6 +7,7 @@ import { readStorageJson, writeStorageJson } from "@/lib/storage";
 
 interface WordAccordionItemProps {
   word: Word;
+  displayMode?: "nzebi" | "french";
   onFavoriteChange?: (wordId: string, isFavorite: boolean) => void;
 }
 
