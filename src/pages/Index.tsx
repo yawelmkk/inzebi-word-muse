@@ -194,7 +194,11 @@ const Index = () => {
                     <MoreVertical className="h-6 w-6" />
                   </Button>
                 </DropdownMenuTrigger>
-                <DropdownMenuContent align="end" className="w-48">
+                <DropdownMenuContent align="end" className="w-56">
+                  <DropdownMenuItem onClick={toggleDisplayMode}>
+                    <ArrowRightLeft className="mr-2 h-4 w-4" />
+                    <span>{displayMode === "nzebi" ? "Afficher Français → Nzébi" : "Afficher Nzébi → Français"}</span>
+                  </DropdownMenuItem>
                   <DropdownMenuItem onClick={() => setIsAboutDialogOpen(true)}>
                     <Info className="mr-2 h-4 w-4" />
                     <span>À propos</span>
