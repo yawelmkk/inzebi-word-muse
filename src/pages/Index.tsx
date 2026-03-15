@@ -39,8 +39,17 @@ const Index = () => {
   const [isAboutDialogOpen, setIsAboutDialogOpen] = useState(false);
   const [activeTab, setActiveTab] = useState(parsedState?.activeTab || "dictionary");
   const [favoriteIds, setFavoriteIds] = useState<string[]>([]);
+  const [displayMode, setDisplayMode] = useState<"nzebi" | "french">(() => 
+    readStorageJson<"nzebi" | "french">("local", "displayMode", "nzebi")
+  );
   const observerTarget = useRef<HTMLDivElement>(null);
   const hasRestoredScroll = useRef(false);
+
+  const toggleDisplayMode = () => {
+    const newMode = displayMode === "nzebi" ? "french" : "nzebi";
+    setDisplayMode(newMode);
+    writeStorageJson("local", "displayMode", newMode);
+  };
 
   // Load favorites from localStorage
   useEffect(() => {
