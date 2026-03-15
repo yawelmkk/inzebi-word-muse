@@ -83,7 +83,7 @@ const Index = () => {
     const q = searchQuery.trim().toLowerCase();
     const category = selectedCategory.trim().toLowerCase();
 
-    return mockWords.filter((word) => {
+    const filtered = mockWords.filter((word) => {
       const nz = word.nzebi_word.toLowerCase();
       const fr = word.french_word.toLowerCase();
 
@@ -109,6 +109,13 @@ const Index = () => {
       }
 
       return partOfSpeech.includes(category) || partOfSpeech.startsWith(category);
+    });
+
+    // Trier alphabétiquement selon le mode d'affichage
+    return filtered.sort((a, b) => {
+      const keyA = displayMode === "french" ? a.french_word.toLowerCase() : a.nzebi_word.toLowerCase();
+      const keyB = displayMode === "french" ? b.french_word.toLowerCase() : b.nzebi_word.toLowerCase();
+      return keyA.localeCompare(keyB, "fr");
     });
   }, [searchQuery, selectedCategory]);
 
