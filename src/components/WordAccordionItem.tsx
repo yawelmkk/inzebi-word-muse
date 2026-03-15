@@ -25,7 +25,7 @@ export const setFavorites = (favorites: string[]) => {
   window.dispatchEvent(new CustomEvent('favoritesChanged', { detail: favorites }));
 };
 
-export const WordAccordionItem = ({ word, onFavoriteChange }: WordAccordionItemProps) => {
+export const WordAccordionItem = ({ word, displayMode = "nzebi", onFavoriteChange }: WordAccordionItemProps) => {
   const [isOpen, setIsOpen] = useState(false);
   const [isFavorite, setIsFavorite] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
