@@ -21,7 +21,7 @@ import {
 } from "@/components/ui/dialog";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
-import { readStorageJson } from "@/lib/storage";
+import { readStorageJson, writeStorageJson } from "@/lib/storage";
 
 const Index = () => {
   // Restaurer l'état depuis sessionStorage (avec fallback sûr en cas de JSON corrompu)
