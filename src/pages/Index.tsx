@@ -5,7 +5,7 @@ import { WordAccordionItem, getFavorites } from "@/components/WordAccordionItem"
 import { CategoryFilter } from "@/components/CategoryFilter";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { mockWords } from "@/data/mockWords";
-import { Sparkles, BookOpen, MoreVertical, Info, Mail, Link, MessageCircle, Facebook, Youtube, Gamepad2, PenLine, Grid3X3, Zap, Heart } from "lucide-react";
+import { Sparkles, BookOpen, MoreVertical, Info, Mail, Link, MessageCircle, Facebook, Youtube, Gamepad2, PenLine, Grid3X3, Zap, Heart, ArrowRightLeft } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -21,7 +21,7 @@ import {
 } from "@/components/ui/dialog";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
-import { readStorageJson } from "@/lib/storage";
+import { readStorageJson, writeStorageJson } from "@/lib/storage";
 
 const Index = () => {
   // Restaurer l'état depuis sessionStorage (avec fallback sûr en cas de JSON corrompu)
@@ -39,8 +39,17 @@ const Index = () => {
   const [isAboutDialogOpen, setIsAboutDialogOpen] = useState(false);
   const [activeTab, setActiveTab] = useState(parsedState?.activeTab || "dictionary");
   const [favoriteIds, setFavoriteIds] = useState<string[]>([]);
+  const [displayMode, setDisplayMode] = useState<"nzebi" | "french">(() => 
+    readStorageJson<"nzebi" | "french">("local", "displayMode", "nzebi")
+  );
   const observerTarget = useRef<HTMLDivElement>(null);
   const hasRestoredScroll = useRef(false);
+
+  const toggleDisplayMode = () => {
+    const newMode = displayMode === "nzebi" ? "french" : "nzebi";
+    setDisplayMode(newMode);
+    writeStorageJson("local", "displayMode", newMode);
+  };
 
   // Load favorites from localStorage
   useEffect(() => {
@@ -185,7 +194,11 @@ const Index = () => {
                     <MoreVertical className="h-6 w-6" />
                   </Button>
                 </DropdownMenuTrigger>
-                <DropdownMenuContent align="end" className="w-48">
+                <DropdownMenuContent align="end" className="w-56">
+                  <DropdownMenuItem onClick={toggleDisplayMode}>
+                    <ArrowRightLeft className="mr-2 h-4 w-4" />
+                    <span>{displayMode === "nzebi" ? "Afficher Français → Nzébi" : "Afficher Nzébi → Français"}</span>
+                  </DropdownMenuItem>
                   <DropdownMenuItem onClick={() => setIsAboutDialogOpen(true)}>
                     <Info className="mr-2 h-4 w-4" />
                     <span>À propos</span>
@@ -405,7 +418,7 @@ const Index = () => {
               <div className="space-y-3">
                 {filteredWords.length > 0 ? (
                   filteredWords.slice(0, displayLimit).map((word) => (
-                    <WordAccordionItem key={word.id} word={word} />
+                    <WordAccordionItem key={word.id} word={word} displayMode={displayMode} />
                   ))
                 ) : (
                   <div className="text-center py-12">
@@ -443,7 +456,7 @@ const Index = () => {
               </div>
               <div className="space-y-3">
                 {featuredWords.map((word) => (
-                  <WordAccordionItem key={word.id} word={word} />
+                  <WordAccordionItem key={word.id} word={word} displayMode={displayMode} />
                 ))}
               </div>
             </div>
@@ -466,7 +479,7 @@ const Index = () => {
                   mockWords
                     .filter(word => favoriteIds.includes(word.id))
                     .map((word) => (
-                      <WordAccordionItem key={word.id} word={word} />
+                      <WordAccordionItem key={word.id} word={word} displayMode={displayMode} />
                     ))
                 ) : (
                   <div className="text-center py-12">
