@@ -418,7 +418,7 @@ const Index = () => {
               <div className="space-y-3">
                 {filteredWords.length > 0 ? (
                   filteredWords.slice(0, displayLimit).map((word) => (
-                    <WordAccordionItem key={word.id} word={word} />
+                    <WordAccordionItem key={word.id} word={word} displayMode={displayMode} />
                   ))
                 ) : (
                   <div className="text-center py-12">
