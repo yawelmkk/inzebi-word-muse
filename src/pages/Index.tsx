@@ -456,7 +456,7 @@ const Index = () => {
               </div>
               <div className="space-y-3">
                 {featuredWords.map((word) => (
-                  <WordAccordionItem key={word.id} word={word} />
+                  <WordAccordionItem key={word.id} word={word} displayMode={displayMode} />
                 ))}
               </div>
             </div>
