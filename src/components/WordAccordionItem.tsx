@@ -124,14 +124,18 @@ export const WordAccordionItem = ({ word, displayMode = "nzebi", onFavoriteChang
       >
         <div className="flex-1 text-left">
           <div className="flex items-center gap-2 flex-wrap">
-            <h3 className="text-xl font-bold text-foreground">{word.nzebi_word}</h3>
+            <h3 className="text-xl font-bold text-foreground">
+              {displayMode === "nzebi" ? word.nzebi_word : word.french_word}
+            </h3>
             {word.part_of_speech && (
               <span className="text-xs bg-secondary px-2 py-1 rounded-full text-secondary-foreground">
                 {word.part_of_speech}
               </span>
             )}
           </div>
-          <p className="text-muted-foreground mt-1">{word.french_word}</p>
+          <p className="text-muted-foreground mt-1">
+            {displayMode === "nzebi" ? word.french_word : word.nzebi_word}
+          </p>
         </div>
         <div className="flex items-center gap-2">
           <Button
