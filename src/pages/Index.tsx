@@ -5,7 +5,7 @@ import { WordAccordionItem, getFavorites } from "@/components/WordAccordionItem"
 import { CategoryFilter } from "@/components/CategoryFilter";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { mockWords } from "@/data/mockWords";
-import { Sparkles, BookOpen, MoreVertical, Info, Mail, Link, MessageCircle, Facebook, Youtube, Gamepad2, PenLine, Grid3X3, Zap, Heart, ArrowRightLeft } from "lucide-react";
+import { Sparkles, BookOpen, MoreVertical, Info, Mail, Link, MessageCircle, Facebook, Youtube, Gamepad2, PenLine, Grid3X3, Zap, Heart, Languages } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
