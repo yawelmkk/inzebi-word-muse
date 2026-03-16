@@ -190,6 +190,16 @@ const Index = () => {
               </h1>
             </div>
             <div className="flex items-center gap-1">
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={toggleDisplayMode}
+                className="text-primary-foreground hover:bg-primary-foreground/20"
+                title={displayMode === "nzebi" ? "Afficher Français → Nzébi" : "Afficher Nzébi → Français"}
+              >
+                <Languages className="h-5 w-5" />
+                <span className="sr-only">Changer le mode d'affichage</span>
+              </Button>
               <ThemeToggle />
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
@@ -202,10 +212,6 @@ const Index = () => {
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end" className="w-56">
-                  <DropdownMenuItem onClick={toggleDisplayMode}>
-                    <ArrowRightLeft className="mr-2 h-4 w-4" />
-                    <span>{displayMode === "nzebi" ? "Afficher Français → Nzébi" : "Afficher Nzébi → Français"}</span>
-                  </DropdownMenuItem>
                   <DropdownMenuItem onClick={() => setIsAboutDialogOpen(true)}>
                     <Info className="mr-2 h-4 w-4" />
                     <span>À propos</span>
