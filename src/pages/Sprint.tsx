@@ -4,7 +4,7 @@ import { ArrowLeft, Heart, RotateCcw, Zap, Volume2, VolumeX } from "lucide-react
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { ThemeToggle } from "@/components/ThemeToggle";
-import { mockWords, Word } from "@/data/mockWords";
+import { mockWords, Word } from "@/data/dictionary";
 
 interface FallingWord {
   id: string;

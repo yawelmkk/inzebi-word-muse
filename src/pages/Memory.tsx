@@ -4,7 +4,7 @@ import { ArrowLeft, RotateCcw, Timer, Grid3X3 } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { ThemeToggle } from "@/components/ThemeToggle";
-import { mockWords, Word } from "@/data/mockWords";
+import { mockWords, Word } from "@/data/dictionary";
 
 interface MemoryCard {
   id: string;

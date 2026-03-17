@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from "react";
 import { Heart, ChevronDown, Volume2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import { Word } from "@/data/mockWords";
+import { Word } from "@/data/dictionary";
 import { readStorageJson, writeStorageJson } from "@/lib/storage";
 
 interface WordAccordionItemProps {

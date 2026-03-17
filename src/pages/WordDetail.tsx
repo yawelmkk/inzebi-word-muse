@@ -2,7 +2,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import { ArrowLeft, Heart, Volume2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { mockWords } from "@/data/mockWords";
+import { mockWords } from "@/data/dictionary";
 import { useState, startTransition } from "react";
 
 const WordDetail = () => {
