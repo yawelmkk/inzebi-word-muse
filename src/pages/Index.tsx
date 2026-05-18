@@ -3,6 +3,7 @@ import { Link as RouterLink } from "react-router-dom";
 import { SearchBar } from "@/components/SearchBar";
 import { WordAccordionItem, getFavorites } from "@/components/WordAccordionItem";
 import { CategoryFilter } from "@/components/CategoryFilter";
+import { LearningCategories } from "@/components/LearningCategories";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { mockWords } from "@/data/dictionary";
 import { Sparkles, BookOpen, MoreVertical, Info, Mail, Link, MessageCircle, Facebook, Youtube, Gamepad2, PenLine, Grid3X3, Zap, Heart, Languages } from "lucide-react";
