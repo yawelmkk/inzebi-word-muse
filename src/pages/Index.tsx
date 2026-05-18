@@ -3,6 +3,7 @@ import { Link as RouterLink } from "react-router-dom";
 import { SearchBar } from "@/components/SearchBar";
 import { WordAccordionItem, getFavorites } from "@/components/WordAccordionItem";
 import { CategoryFilter } from "@/components/CategoryFilter";
+import { LearningCategories } from "@/components/LearningCategories";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { mockWords } from "@/data/dictionary";
 import { Sparkles, BookOpen, MoreVertical, Info, Mail, Link, MessageCircle, Facebook, Youtube, Gamepad2, PenLine, Grid3X3, Zap, Heart, Languages } from "lucide-react";
@@ -618,15 +619,10 @@ const Index = () => {
                   Activités
                 </h2>
                 <p className="text-muted-foreground mt-2">
-                  Exercices et activités pour pratiquer le Nzébi
+                  Apprenez le Inzèbi pas à pas, par thèmes
                 </p>
               </div>
-              <div className="text-center py-12">
-                <Zap className="h-12 w-12 text-muted-foreground/50 mx-auto mb-4" />
-                <p className="text-muted-foreground">
-                  De nouvelles activités arrivent bientôt !
-                </p>
-              </div>
+              <LearningCategories />
             </div>
           </TabsContent>
         </Tabs>
