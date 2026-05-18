@@ -10,8 +10,18 @@ import {
   ChevronRight,
   LucideIcon,
   Sparkles,
+  BadgeCheck,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { NamesDirectory } from "@/components/NamesDirectory";
+import { nzebiNames } from "@/data/nzebiNames";
 
 interface Lesson {
   title: string;
@@ -22,7 +32,7 @@ interface Category {
   title: string;
   description: string;
   icon: LucideIcon;
-  accent: string; // tailwind classes for icon bg
+  accent: string;
   lessons: Lesson[];
 }
 
@@ -113,88 +123,142 @@ const CATEGORIES: Category[] = [
 
 export const LearningCategories = () => {
   const [openId, setOpenId] = useState<string | null>(null);
+  const [namesOpen, setNamesOpen] = useState(false);
 
   return (
-    <div className="grid gap-4 sm:grid-cols-2">
-      {CATEGORIES.map((cat) => {
-        const Icon = cat.icon;
-        const isOpen = openId === cat.id;
-        return (
-          <div
-            key={cat.id}
-            className={cn(
-              "rounded-2xl border bg-card text-card-foreground shadow-soft overflow-hidden transition-all duration-300",
-              isOpen ? "border-primary/40 shadow-md" : "hover:border-primary/30 hover:shadow-md"
-            )}
-          >
-            <button
-              type="button"
-              onClick={() => setOpenId(isOpen ? null : cat.id)}
-              aria-expanded={isOpen}
-              className="w-full text-left p-5 flex items-center gap-4"
-            >
-              <div
-                className={cn(
-                  "w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0",
-                  cat.accent
-                )}
-              >
-                <Icon className="w-6 h-6" />
-              </div>
-              <div className="flex-1 min-w-0">
-                <h3 className="font-semibold text-base text-foreground truncate">
-                  {cat.title}
-                </h3>
-                <p className="text-xs text-muted-foreground mt-0.5 line-clamp-1">
-                  {cat.description}
-                </p>
-                <p className="text-[11px] font-medium text-primary mt-1">
-                  {cat.lessons.length} leçon{cat.lessons.length > 1 ? "s" : ""}
-                </p>
-              </div>
-              <ChevronRight
-                className={cn(
-                  "w-5 h-5 text-muted-foreground transition-transform duration-300 flex-shrink-0",
-                  isOpen && "rotate-90 text-primary"
-                )}
-              />
-            </button>
+    <>
+      <div className="grid gap-4 sm:grid-cols-2">
+        {/* Carte spéciale : Répertoire des Noms */}
+        <button
+          type="button"
+          onClick={() => setNamesOpen(true)}
+          className={cn(
+            "group sm:col-span-2 text-left rounded-2xl overflow-hidden",
+            "border-2 border-primary/30 bg-gradient-to-br from-primary/5 via-card to-accent/5",
+            "shadow-soft hover:shadow-md hover:border-primary/50 transition-all duration-300",
+            "p-5 flex items-center gap-4"
+          )}
+        >
+          <div className="w-14 h-14 rounded-2xl bg-primary text-primary-foreground flex items-center justify-center flex-shrink-0 shadow-sm group-hover:scale-105 transition-transform">
+            <BadgeCheck className="w-7 h-7" />
+          </div>
+          <div className="flex-1 min-w-0">
+            <div className="flex items-center gap-2 flex-wrap">
+              <h3 className="font-semibold text-base text-foreground">
+                Le Répertoire des Noms
+              </h3>
+              <span className="text-[10px] uppercase tracking-wider font-bold text-primary bg-primary/10 px-2 py-0.5 rounded-full">
+                Nouveau
+              </span>
+            </div>
+            <p className="text-xs text-muted-foreground mt-0.5">
+              Prénoms et noms nzébi, leur signification et leur histoire
+            </p>
+            <p className="text-[11px] font-medium text-primary mt-1">
+              {nzebiNames.length} noms répertoriés
+            </p>
+          </div>
+          <ChevronRight className="w-5 h-5 text-primary flex-shrink-0 group-hover:translate-x-1 transition-transform" />
+        </button>
 
+        {CATEGORIES.map((cat) => {
+          const Icon = cat.icon;
+          const isOpen = openId === cat.id;
+          return (
             <div
+              key={cat.id}
               className={cn(
-                "grid transition-all duration-300 ease-out",
-                isOpen ? "grid-rows-[1fr] opacity-100" : "grid-rows-[0fr] opacity-0"
+                "rounded-2xl border bg-card text-card-foreground shadow-soft overflow-hidden transition-all duration-300",
+                isOpen ? "border-primary/40 shadow-md" : "hover:border-primary/30 hover:shadow-md"
               )}
             >
-              <div className="overflow-hidden">
-                <div className="px-5 pb-5 pt-1 border-t border-border/60">
-                  <ul className="space-y-2 mt-3">
-                    {cat.lessons.map((lesson, i) => (
-                      <li
-                        key={lesson.title}
-                        className="group flex items-center gap-3 rounded-lg border border-border/60 bg-muted/40 px-3 py-2.5 hover:bg-muted hover:border-primary/40 transition-colors cursor-pointer"
-                      >
-                        <span
-                          className={cn(
-                            "w-7 h-7 rounded-md flex items-center justify-center text-xs font-semibold flex-shrink-0",
-                            cat.accent
-                          )}
+              <button
+                type="button"
+                onClick={() => setOpenId(isOpen ? null : cat.id)}
+                aria-expanded={isOpen}
+                className="w-full text-left p-5 flex items-center gap-4"
+              >
+                <div
+                  className={cn(
+                    "w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0",
+                    cat.accent
+                  )}
+                >
+                  <Icon className="w-6 h-6" />
+                </div>
+                <div className="flex-1 min-w-0">
+                  <h3 className="font-semibold text-base text-foreground truncate">
+                    {cat.title}
+                  </h3>
+                  <p className="text-xs text-muted-foreground mt-0.5 line-clamp-1">
+                    {cat.description}
+                  </p>
+                  <p className="text-[11px] font-medium text-primary mt-1">
+                    {cat.lessons.length} leçon{cat.lessons.length > 1 ? "s" : ""}
+                  </p>
+                </div>
+                <ChevronRight
+                  className={cn(
+                    "w-5 h-5 text-muted-foreground transition-transform duration-300 flex-shrink-0",
+                    isOpen && "rotate-90 text-primary"
+                  )}
+                />
+              </button>
+
+              <div
+                className={cn(
+                  "grid transition-all duration-300 ease-out",
+                  isOpen ? "grid-rows-[1fr] opacity-100" : "grid-rows-[0fr] opacity-0"
+                )}
+              >
+                <div className="overflow-hidden">
+                  <div className="px-5 pb-5 pt-1 border-t border-border/60">
+                    <ul className="space-y-2 mt-3">
+                      {cat.lessons.map((lesson, i) => (
+                        <li
+                          key={lesson.title}
+                          className="group flex items-center gap-3 rounded-lg border border-border/60 bg-muted/40 px-3 py-2.5 hover:bg-muted hover:border-primary/40 transition-colors cursor-pointer"
                         >
-                          {i + 1}
-                        </span>
-                        <span className="text-sm text-foreground flex-1">
-                          {lesson.title}
-                        </span>
-                        <Sparkles className="w-4 h-4 text-muted-foreground/50 group-hover:text-primary transition-colors" />
-                      </li>
-                    ))}
-                  </ul>
+                          <span
+                            className={cn(
+                              "w-7 h-7 rounded-md flex items-center justify-center text-xs font-semibold flex-shrink-0",
+                              cat.accent
+                            )}
+                          >
+                            {i + 1}
+                          </span>
+                          <span className="text-sm text-foreground flex-1">
+                            {lesson.title}
+                          </span>
+                          <Sparkles className="w-4 h-4 text-muted-foreground/50 group-hover:text-primary transition-colors" />
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
                 </div>
               </div>
             </div>
+          );
+        })}
+      </div>
+
+      {/* Dialog : Répertoire des Noms */}
+      <Dialog open={namesOpen} onOpenChange={setNamesOpen}>
+        <DialogContent className="sm:max-w-3xl max-h-[85vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              <BadgeCheck className="w-5 h-5 text-primary" />
+              Le Répertoire des Noms
+            </DialogTitle>
+            <DialogDescription>
+              Découvrez les prénoms et noms nzébi, leur signification et leur contexte culturel.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="mt-2">
+            <NamesDirectory />
           </div>
-        );
-      })}
-    </div>
+        </DialogContent>
+      </Dialog>
+    </>
   );
 };
