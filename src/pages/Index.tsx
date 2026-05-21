@@ -5,6 +5,7 @@ import { WordAccordionItem, getFavorites } from "@/components/WordAccordionItem"
 import { CategoryFilter } from "@/components/CategoryFilter";
 import { LearningCategories } from "@/components/LearningCategories";
 import { ThemeToggle } from "@/components/ThemeToggle";
+import { UserMenu } from "@/components/UserMenu";
 import { mockWords } from "@/data/dictionary";
 import { Sparkles, BookOpen, MoreVertical, Info, Mail, Link, MessageCircle, Facebook, Youtube, Gamepad2, PenLine, Grid3X3, Zap, Heart, Languages } from "lucide-react";
 import {
@@ -202,6 +203,7 @@ const Index = () => {
                 <span className="sr-only">Changer le mode d'affichage</span>
               </Button>
               <ThemeToggle />
+              <UserMenu />
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <Button 
