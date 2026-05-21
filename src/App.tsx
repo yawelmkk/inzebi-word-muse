@@ -69,28 +69,30 @@ class AppErrorBoundary extends Component<{ children: ReactNode }, { hasError: bo
 const App = () => {
   return (
     <AppErrorBoundary>
-      <QueryClientProvider client={queryClient}>
-        <ThemeProvider attribute="class" defaultTheme="light" enableSystem>
-          <BrowserRouter basename={import.meta.env.PROD ? "/inzebi-word-muse" : "/"}>
-            <TooltipProvider>
-              <Toaster />
-              {/* Le composant Sonner est supprimé pour le build */}
-
-              <Suspense fallback={<RouteLoading />}>
-                <Routes>
-                  <Route path="/" element={<Index />} />
-                  <Route path="/word/:id" element={<WordDetail />} />
-                  <Route path="/quiz" element={<Quiz />} />
-                  <Route path="/hangman" element={<Hangman />} />
-                  <Route path="/memory" element={<Memory />} />
-                  <Route path="/sprint" element={<Sprint />} />
-                  <Route path="*" element={<NotFound />} />
-                </Routes>
-              </Suspense>
-            </TooltipProvider>
-          </BrowserRouter>
-        </ThemeProvider>
-      </QueryClientProvider>
+      <QueryClientProvider client={queryClient}>
+        <ThemeProvider attribute="class" defaultTheme="light" enableSystem>
+          <BrowserRouter basename={import.meta.env.PROD ? "/inzebi-word-muse" : "/"}>
+            <AuthProvider>
+              <TooltipProvider>
+                <Toaster />
+                <Suspense fallback={<RouteLoading />}>
+                  <Routes>
+                    <Route path="/" element={<Index />} />
+                    <Route path="/auth" element={<Auth />} />
+                    <Route path="/subscription" element={<Subscription />} />
+                    <Route path="/word/:id" element={<WordDetail />} />
+                    <Route path="/quiz" element={<PremiumGate fallbackTitle="Quiz premium"><Quiz /></PremiumGate>} />
+                    <Route path="/hangman" element={<PremiumGate fallbackTitle="Pendu premium"><Hangman /></PremiumGate>} />
+                    <Route path="/memory" element={<PremiumGate fallbackTitle="Memory premium"><Memory /></PremiumGate>} />
+                    <Route path="/sprint" element={<PremiumGate fallbackTitle="Sprint premium"><Sprint /></PremiumGate>} />
+                    <Route path="*" element={<NotFound />} />
+                  </Routes>
+                </Suspense>
+              </TooltipProvider>
+            </AuthProvider>
+          </BrowserRouter>
+        </ThemeProvider>
+      </QueryClientProvider>
     </AppErrorBoundary>
   );
 };
