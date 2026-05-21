@@ -3,6 +3,8 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { ThemeProvider } from "next-themes";
 import { Component, lazy, ReactNode, Suspense } from "react";
+import { AuthProvider } from "@/hooks/useAuth";
+import { PremiumGate } from "@/components/PremiumGate";
 
 const Index = lazy(() => import("./pages/Index"));
 const WordDetail = lazy(() => import("./pages/WordDetail"));
@@ -10,6 +12,8 @@ const Quiz = lazy(() => import("./pages/Quiz"));
 const Hangman = lazy(() => import("./pages/Hangman"));
 const Memory = lazy(() => import("./pages/Memory"));
 const Sprint = lazy(() => import("./pages/Sprint"));
+const Auth = lazy(() => import("./pages/Auth"));
+const Subscription = lazy(() => import("./pages/Subscription"));
 const NotFound = lazy(() => import("./pages/NotFound"));
 
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
