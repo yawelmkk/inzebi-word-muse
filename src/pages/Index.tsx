@@ -203,6 +203,7 @@ const Index = () => {
                 <span className="sr-only">Changer le mode d'affichage</span>
               </Button>
               <ThemeToggle />
+              <UserMenu />
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <Button 
