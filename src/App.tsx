@@ -71,7 +71,7 @@ const App = () => {
     <AppErrorBoundary>
       <QueryClientProvider client={queryClient}>
         <ThemeProvider attribute="class" defaultTheme="light" enableSystem>
-          <BrowserRouter basename={import.meta.env.PROD ? "/inzebi-word-muse" : "/"}>
+          <BrowserRouter basename={import.meta.env.PROD && typeof window !== "undefined" && window.location.hostname.endsWith("github.io") ? "/inzebi-word-muse" : "/"}>
             <AuthProvider>
               <TooltipProvider>
                 <Toaster />
