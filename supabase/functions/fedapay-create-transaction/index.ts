@@ -41,8 +41,8 @@ Deno.serve(async (req) => {
 
     const admin = createClient(supabaseUrl, serviceRole);
 
-    // Détection environnement FedaPay (clé sk_test_ vs sk_live_)
-    const isTest = fedapayKey.startsWith("sk_test_") || fedapayKey.includes("sandbox");
+    // Détection environnement FedaPay (clé sk_sandbox_ vs sk_live_)
+    const isTest = fedapayKey.startsWith("sk_sandbox_") || fedapayKey.startsWith("sk_test_") || fedapayKey.toLowerCase().includes("sandbox");
     const fedapayBase = isTest ? "https://sandbox-api.fedapay.com" : "https://api.fedapay.com";
 
     // 1. Créer la transaction FedaPay
