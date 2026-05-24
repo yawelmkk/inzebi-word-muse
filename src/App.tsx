@@ -4,7 +4,6 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { ThemeProvider } from "next-themes";
 import { Component, lazy, ReactNode, Suspense } from "react";
 import { AuthProvider } from "@/hooks/useAuth";
-import { PremiumGate } from "@/components/PremiumGate";
 
 const Index = lazy(() => import("./pages/Index"));
 const WordDetail = lazy(() => import("./pages/WordDetail"));
@@ -13,11 +12,9 @@ const Hangman = lazy(() => import("./pages/Hangman"));
 const Memory = lazy(() => import("./pages/Memory"));
 const Sprint = lazy(() => import("./pages/Sprint"));
 const Auth = lazy(() => import("./pages/Auth"));
-const Subscription = lazy(() => import("./pages/Subscription"));
 const NotFound = lazy(() => import("./pages/NotFound"));
 
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-// L'import de Sonner est supprimé car il fait échouer le build.
 
 const queryClient = new QueryClient();
 
@@ -67,7 +64,7 @@ class AppErrorBoundary extends Component<{ children: ReactNode }, { hasError: bo
 }
 
 const App = () => {
-  return (
+  return (
     <AppErrorBoundary>
       <QueryClientProvider client={queryClient}>
         <ThemeProvider attribute="class" defaultTheme="light" enableSystem>
@@ -79,12 +76,11 @@ const App = () => {
                   <Routes>
                     <Route path="/" element={<Index />} />
                     <Route path="/auth" element={<Auth />} />
-                    <Route path="/subscription" element={<Subscription />} />
                     <Route path="/word/:id" element={<WordDetail />} />
-                    <Route path="/quiz" element={<PremiumGate fallbackTitle="Quiz premium"><Quiz /></PremiumGate>} />
-                    <Route path="/hangman" element={<PremiumGate fallbackTitle="Pendu premium"><Hangman /></PremiumGate>} />
-                    <Route path="/memory" element={<PremiumGate fallbackTitle="Memory premium"><Memory /></PremiumGate>} />
-                    <Route path="/sprint" element={<PremiumGate fallbackTitle="Sprint premium"><Sprint /></PremiumGate>} />
+                    <Route path="/quiz" element={<Quiz />} />
+                    <Route path="/hangman" element={<Hangman />} />
+                    <Route path="/memory" element={<Memory />} />
+                    <Route path="/sprint" element={<Sprint />} />
                     <Route path="*" element={<NotFound />} />
                   </Routes>
                 </Suspense>
@@ -94,7 +90,7 @@ const App = () => {
         </ThemeProvider>
       </QueryClientProvider>
     </AppErrorBoundary>
-  );
+  );
 };
 
 export default App;
