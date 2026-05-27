@@ -1,0 +1,98 @@
+CREATE TABLE public.nzebi_names (
+  id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  name text NOT NULL UNIQUE,
+  gender text,
+  meaning text,
+  context text,
+  created_at timestamptz NOT NULL DEFAULT now(),
+  updated_at timestamptz NOT NULL DEFAULT now(),
+  created_by uuid
+);
+GRANT SELECT ON public.nzebi_names TO anon;
+GRANT SELECT, INSERT, UPDATE, DELETE ON public.nzebi_names TO authenticated;
+GRANT ALL ON public.nzebi_names TO service_role;
+ALTER TABLE public.nzebi_names ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "Public can read names" ON public.nzebi_names FOR SELECT USING (true);
+CREATE POLICY "Admins insert names" ON public.nzebi_names FOR INSERT TO authenticated WITH CHECK (public.has_role(auth.uid(), 'admin'));
+CREATE POLICY "Admins update names" ON public.nzebi_names FOR UPDATE TO authenticated USING (public.has_role(auth.uid(), 'admin'));
+CREATE POLICY "Admins delete names" ON public.nzebi_names FOR DELETE TO authenticated USING (public.has_role(auth.uid(), 'admin'));
+CREATE TRIGGER nzebi_names_updated_at BEFORE UPDATE ON public.nzebi_names FOR EACH ROW EXECUTE FUNCTION public.update_updated_at_column();
+
+INSERT INTO public.nzebi_names (name, gender, meaning, context) VALUES
+('Bouanga', 'M', 'Force, vigueur', 'Nom porté par des lignées de guerriers.'),
+('Bouassa', 'M', 'Le rassembleur', 'Donné à un enfant attendu par toute la famille.'),
+('Boukinda', 'M', 'Celui qui protège', NULL),
+('Boumba', 'M/F', 'Le mystère', 'Référence à la spiritualité ancestrale.'),
+('Diboua', 'F', 'La parole, la voix', NULL),
+('Dikamba', 'M', 'Celui qui parle bien', NULL),
+('Dilengui', 'M', 'Celui qui veille', NULL),
+('Dingha', 'M', 'Le grand, le digne', NULL),
+('Disso', 'M', 'L''œil, le regard', NULL),
+('Diyembi', 'F', 'La chanteuse, celle qui réjouit', NULL),
+('Ghouekoumou', 'M', 'Honneur de la famille', NULL),
+('Guembi', 'F', 'La danseuse', NULL),
+('Ibinga', 'M', 'Celui qui rassemble', NULL),
+('Ikapi', 'M', 'Le vif, le rapide', NULL),
+('Iloko', 'M', 'Le sage', NULL),
+('Itoumba', 'F', 'La douce', NULL),
+('Kombila', 'M', 'Celui qui demande, qui prie', NULL),
+('Koumba', 'F', 'La cadette', NULL),
+('Lendoye', 'M', 'Le tranquille', NULL),
+('Lengomba', 'M', 'Celui de la rivière', NULL),
+('Lewoungou', 'M', 'L''héritier', NULL),
+('Loemba', 'F', 'La paix', NULL),
+('Mabicka', 'M', 'Le bénéfique', NULL),
+('Mabika', 'F', 'La bienfaisante', NULL),
+('Mackaya', 'M', 'Le rayonnant', NULL),
+('Madouma', 'M', 'Celui qui apporte la chance', NULL),
+('Madoungou', 'M', 'Le voyageur', NULL),
+('Magaya', 'F', 'La joyeuse', NULL),
+('Mahoungou', 'M', 'Le vent, l''esprit libre', NULL),
+('Makaya', 'M', 'Celui qui éclaire', NULL),
+('Makita', 'M', 'Le combattant', NULL),
+('Makosso', 'M', 'Le roi, le chef', NULL),
+('Mambouna', 'F', 'La belle', NULL),
+('Mamboundou', 'M', 'Le guérisseur', NULL),
+('Mavoungou', 'M', 'Le souffle, la vie', NULL),
+('Mayombo', 'M', 'Celui de la forêt', NULL),
+('Mbadinga', 'M', 'L''orateur', NULL),
+('Mbina', 'F', 'La danseuse', NULL),
+('Mbouity', 'M', 'Le serviteur', NULL),
+('Mboumba', 'M/F', 'Le serpent sacré', 'Référence à un esprit protecteur.'),
+('Mihindou', 'M', 'Le travailleur', NULL),
+('Mikala', 'F', 'L''élégante', NULL),
+('Milebou', 'M', 'Celui qui guide', NULL),
+('Mintsa', 'M', 'Le rusé', NULL),
+('Mombo', 'M', 'Le voisin, le proche', NULL),
+('Moubamba', 'M', 'Le bâtisseur', NULL),
+('Mouele', 'F', 'La lumineuse', NULL),
+('Mouketou', 'M', 'Celui qui marche droit', NULL),
+('Moukila', 'M', 'La queue, le suivant', NULL),
+('Moukinda', 'M', 'Le protecteur', NULL),
+('Moulengui', 'M', 'Le veilleur', NULL),
+('Mounanga', 'F', 'L''enfant aimée', NULL),
+('Mounguengui', 'M', 'Le brillant', NULL),
+('Moussadji', 'M', 'Le médiateur', NULL),
+('Moussavou', 'M', 'Le rouge, le terre-de-feu', NULL),
+('Moutsinga', 'M', 'Le pilier', NULL),
+('Mouyabi', 'M', 'Celui qui sait', NULL),
+('Mouyembi', 'F', 'La chanteuse', NULL),
+('Ndinga', 'M', 'La parole', NULL),
+('Ndombi', 'M', 'Le noir, le profond', NULL),
+('Ndoumba', 'F', 'La jeune fille', NULL),
+('Ngoma', 'M', 'Le tambour', NULL),
+('Ngouma', 'M', 'Le léopard', NULL),
+('Nguema', 'M', 'Le vaillant', NULL),
+('Nzamba', 'M', 'L''éléphant', 'Symbole de puissance.'),
+('Nzigou', 'M', 'Le respecté', NULL),
+('Obame', 'M', 'Le second né', NULL),
+('Pambou', 'M', 'La pluie', NULL),
+('Pendi', 'F', 'La bien-aimée', NULL),
+('Sounda', 'M', 'Le fidèle', NULL),
+('Tchibinda', 'M', 'Le chasseur', NULL),
+('Tsamba', 'M', 'Le rapide', NULL),
+('Yembi', 'F', 'La chanteuse', NULL),
+('Yombi', 'M', 'Celui de la forêt', NULL)
+ON CONFLICT (name) DO NOTHING;
+
+INSERT INTO public.user_roles (user_id, role) VALUES ('b7c705b9-b625-4dfc-9b95-aab664571ecb', 'admin') ON CONFLICT (user_id, role) DO NOTHING;
