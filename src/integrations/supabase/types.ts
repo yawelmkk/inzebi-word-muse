@@ -14,6 +14,39 @@ export type Database = {
   }
   public: {
     Tables: {
+      nzebi_names: {
+        Row: {
+          context: string | null
+          created_at: string
+          created_by: string | null
+          gender: string | null
+          id: string
+          meaning: string | null
+          name: string
+          updated_at: string
+        }
+        Insert: {
+          context?: string | null
+          created_at?: string
+          created_by?: string | null
+          gender?: string | null
+          id?: string
+          meaning?: string | null
+          name: string
+          updated_at?: string
+        }
+        Update: {
+          context?: string | null
+          created_at?: string
+          created_by?: string | null
+          gender?: string | null
+          id?: string
+          meaning?: string | null
+          name?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           created_at: string

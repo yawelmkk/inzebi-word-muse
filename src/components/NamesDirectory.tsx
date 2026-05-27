@@ -1,12 +1,50 @@
-import { useMemo, useState } from "react";
-import { Search, User2, X } from "lucide-react";
+import { useEffect, useMemo, useState } from "react";
+import { Plus, Search, Trash2, User2, X } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { nzebiNames, type NzebiName } from "@/data/nzebiNames";
+import { Textarea } from "@/components/ui/textarea";
+import { Label } from "@/components/ui/label";
+import {
+  Dialog,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { supabase } from "@/integrations/supabase/client";
+import { useIsAdmin } from "@/hooks/useIsAdmin";
+import { toast } from "@/hooks/use-toast";
 import { cn } from "@/lib/utils";
 
-const genderLabel = (g?: NzebiName["gender"]) => {
+type Gender = "M" | "F" | "M/F";
+interface NameRow {
+  id: string;
+  name: string;
+  gender: Gender | null;
+  meaning: string | null;
+  context: string | null;
+}
+
+const genderLabel = (g?: string | null) => {
   if (g === "M") return "Masculin";
   if (g === "F") return "Féminin";
   if (g === "M/F") return "Mixte";
@@ -14,11 +52,45 @@ const genderLabel = (g?: NzebiName["gender"]) => {
 };
 
 export const NamesDirectory = () => {
+  const { isAdmin } = useIsAdmin();
   const [query, setQuery] = useState("");
+  const [names, setNames] = useState<NameRow[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  // Add dialog
+  const [addOpen, setAddOpen] = useState(false);
+  const [form, setForm] = useState({
+    name: "",
+    gender: "" as "" | Gender,
+    meaning: "",
+    context: "",
+  });
+  const [saving, setSaving] = useState(false);
+
+  // Delete
+  const [toDelete, setToDelete] = useState<NameRow | null>(null);
+
+  const fetchNames = async () => {
+    setLoading(true);
+    const { data, error } = await supabase
+      .from("nzebi_names")
+      .select("id, name, gender, meaning, context")
+      .order("name");
+    if (error) {
+      toast({ title: "Erreur", description: error.message, variant: "destructive" });
+    } else {
+      setNames((data ?? []) as NameRow[]);
+    }
+    setLoading(false);
+  };
+
+  useEffect(() => {
+    fetchNames();
+  }, []);
 
   const grouped = useMemo(() => {
     const q = query.trim().toLowerCase();
-    const filtered = nzebiNames
+    const filtered = names
       .filter((n) => {
         if (!q) return true;
         return (
@@ -29,48 +101,156 @@ export const NamesDirectory = () => {
       })
       .sort((a, b) => a.name.localeCompare(b.name, "fr"));
 
-    const map = new Map<string, NzebiName[]>();
+    const map = new Map<string, NameRow[]>();
     for (const n of filtered) {
       const letter = n.name.charAt(0).toUpperCase();
       if (!map.has(letter)) map.set(letter, []);
       map.get(letter)!.push(n);
     }
     return Array.from(map.entries()).sort(([a], [b]) => a.localeCompare(b, "fr"));
-  }, [query]);
+  }, [query, names]);
 
   const total = useMemo(
     () => grouped.reduce((acc, [, list]) => acc + list.length, 0),
     [grouped]
   );
 
+  const resetForm = () =>
+    setForm({ name: "", gender: "", meaning: "", context: "" });
+
+  const handleAdd = async () => {
+    if (!form.name.trim()) {
+      toast({ title: "Le nom est requis", variant: "destructive" });
+      return;
+    }
+    setSaving(true);
+    const { error } = await supabase.from("nzebi_names").insert({
+      name: form.name.trim(),
+      gender: form.gender || null,
+      meaning: form.meaning.trim() || null,
+      context: form.context.trim() || null,
+    });
+    setSaving(false);
+    if (error) {
+      toast({ title: "Erreur", description: error.message, variant: "destructive" });
+      return;
+    }
+    toast({ title: "Nom ajouté" });
+    resetForm();
+    setAddOpen(false);
+    fetchNames();
+  };
+
+  const handleDelete = async () => {
+    if (!toDelete) return;
+    const { error } = await supabase.from("nzebi_names").delete().eq("id", toDelete.id);
+    if (error) {
+      toast({ title: "Erreur", description: error.message, variant: "destructive" });
+      return;
+    }
+    toast({ title: `« ${toDelete.name} » supprimé` });
+    setToDelete(null);
+    fetchNames();
+  };
+
   return (
     <div className="space-y-4">
-      {/* Search */}
-      <div className="relative">
-        <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-        <Input
-          value={query}
-          onChange={(e) => setQuery(e.target.value)}
-          placeholder="Rechercher un nom, une signification…"
-          className="pl-9 pr-9 h-11 rounded-xl"
-        />
-        {query && (
-          <Button
-            type="button"
-            variant="ghost"
-            size="icon"
-            onClick={() => setQuery("")}
-            className="absolute right-1 top-1/2 -translate-y-1/2 h-8 w-8"
-            aria-label="Effacer la recherche"
-          >
-            <X className="h-4 w-4" />
-          </Button>
+      {/* Search + admin add */}
+      <div className="flex gap-2">
+        <div className="relative flex-1">
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+          <Input
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+            placeholder="Rechercher un nom, une signification…"
+            className="pl-9 pr-9 h-11 rounded-xl"
+          />
+          {query && (
+            <Button
+              type="button"
+              variant="ghost"
+              size="icon"
+              onClick={() => setQuery("")}
+              className="absolute right-1 top-1/2 -translate-y-1/2 h-8 w-8"
+              aria-label="Effacer la recherche"
+            >
+              <X className="h-4 w-4" />
+            </Button>
+          )}
+        </div>
+
+        {isAdmin && (
+          <Dialog open={addOpen} onOpenChange={(o) => { setAddOpen(o); if (!o) resetForm(); }}>
+            <DialogTrigger asChild>
+              <Button className="h-11 rounded-xl gap-1">
+                <Plus className="h-4 w-4" />
+                <span className="hidden sm:inline">Ajouter</span>
+              </Button>
+            </DialogTrigger>
+            <DialogContent>
+              <DialogHeader>
+                <DialogTitle>Ajouter un nom</DialogTitle>
+              </DialogHeader>
+              <div className="space-y-3">
+                <div className="space-y-1.5">
+                  <Label htmlFor="name">Nom *</Label>
+                  <Input
+                    id="name"
+                    value={form.name}
+                    onChange={(e) => setForm((f) => ({ ...f, name: e.target.value }))}
+                    placeholder="Ex: Mavoungou"
+                  />
+                </div>
+                <div className="space-y-1.5">
+                  <Label>Genre</Label>
+                  <Select
+                    value={form.gender}
+                    onValueChange={(v) => setForm((f) => ({ ...f, gender: v as Gender }))}
+                  >
+                    <SelectTrigger>
+                      <SelectValue placeholder="Choisir (optionnel)" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="M">Masculin</SelectItem>
+                      <SelectItem value="F">Féminin</SelectItem>
+                      <SelectItem value="M/F">Mixte</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div className="space-y-1.5">
+                  <Label htmlFor="meaning">Signification</Label>
+                  <Input
+                    id="meaning"
+                    value={form.meaning}
+                    onChange={(e) => setForm((f) => ({ ...f, meaning: e.target.value }))}
+                    placeholder="Ex: Le souffle, la vie"
+                  />
+                </div>
+                <div className="space-y-1.5">
+                  <Label htmlFor="context">Contexte culturel</Label>
+                  <Textarea
+                    id="context"
+                    value={form.context}
+                    onChange={(e) => setForm((f) => ({ ...f, context: e.target.value }))}
+                    placeholder="Origine, usage, anecdote…"
+                    rows={3}
+                  />
+                </div>
+              </div>
+              <DialogFooter>
+                <Button variant="ghost" onClick={() => setAddOpen(false)}>Annuler</Button>
+                <Button onClick={handleAdd} disabled={saving}>
+                  {saving ? "Enregistrement…" : "Ajouter"}
+                </Button>
+              </DialogFooter>
+            </DialogContent>
+          </Dialog>
         )}
       </div>
 
       <div className="flex items-center justify-between text-xs text-muted-foreground px-1">
         <span>
-          {total} nom{total > 1 ? "s" : ""} trouvé{total > 1 ? "s" : ""}
+          {loading ? "Chargement…" : `${total} nom${total > 1 ? "s" : ""} trouvé${total > 1 ? "s" : ""}`}
         </span>
         <span className="hidden sm:inline">Cliquez pour voir le contexte</span>
       </div>
@@ -91,7 +271,7 @@ export const NamesDirectory = () => {
       )}
 
       {/* List */}
-      {total === 0 ? (
+      {!loading && total === 0 ? (
         <div className="text-center py-12 text-muted-foreground text-sm">
           Aucun nom ne correspond à votre recherche.
         </div>
@@ -110,9 +290,9 @@ export const NamesDirectory = () => {
                   const gLabel = genderLabel(n.gender);
                   return (
                     <li
-                      key={n.name}
+                      key={n.id}
                       className={cn(
-                        "rounded-xl border bg-card p-3 transition-colors",
+                        "rounded-xl border bg-card p-3 transition-colors group",
                         "hover:border-primary/40 hover:shadow-sm"
                       )}
                     >
@@ -130,9 +310,7 @@ export const NamesDirectory = () => {
                             )}
                           </div>
                           {n.meaning ? (
-                            <p className="text-sm text-foreground/80 mt-0.5">
-                              {n.meaning}
-                            </p>
+                            <p className="text-sm text-foreground/80 mt-0.5">{n.meaning}</p>
                           ) : (
                             <p className="text-xs text-muted-foreground italic mt-0.5">
                               Signification à compléter
@@ -144,6 +322,17 @@ export const NamesDirectory = () => {
                             </p>
                           )}
                         </div>
+                        {isAdmin && (
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            className="h-7 w-7 text-muted-foreground hover:text-destructive opacity-0 group-hover:opacity-100 transition-opacity"
+                            onClick={() => setToDelete(n)}
+                            aria-label={`Supprimer ${n.name}`}
+                          >
+                            <Trash2 className="h-3.5 w-3.5" />
+                          </Button>
+                        )}
                       </div>
                     </li>
                   );
@@ -153,6 +342,21 @@ export const NamesDirectory = () => {
           ))}
         </div>
       )}
+
+      <AlertDialog open={!!toDelete} onOpenChange={(o) => !o && setToDelete(null)}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Supprimer ce nom ?</AlertDialogTitle>
+            <AlertDialogDescription>
+              « {toDelete?.name} » sera définitivement supprimé du répertoire.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Annuler</AlertDialogCancel>
+            <AlertDialogAction onClick={handleDelete}>Supprimer</AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 };
