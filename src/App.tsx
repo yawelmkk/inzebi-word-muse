@@ -2,8 +2,9 @@ import { Toaster } from "@/components/ui/toaster";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { ThemeProvider } from "next-themes";
-import { Component, lazy, ReactNode, Suspense } from "react";
+import { Component, lazy, ReactNode, Suspense, useState } from "react";
 import { AuthProvider } from "@/hooks/useAuth";
+import SplashScreen from "@/components/SplashScreen";
 
 const Index = lazy(() => import("./pages/Index"));
 const WordDetail = lazy(() => import("./pages/WordDetail"));
@@ -64,6 +65,8 @@ class AppErrorBoundary extends Component<{ children: ReactNode }, { hasError: bo
 }
 
 const App = () => {
+  const [showSplash, setShowSplash] = useState(true);
+
   return (
     <AppErrorBoundary>
       <QueryClientProvider client={queryClient}>
@@ -72,6 +75,7 @@ const App = () => {
             <AuthProvider>
               <TooltipProvider>
                 <Toaster />
+                {showSplash && <SplashScreen onComplete={() => setShowSplash(false)} duration={2500} />}
                 <Suspense fallback={<RouteLoading />}>
                   <Routes>
                     <Route path="/" element={<Index />} />
