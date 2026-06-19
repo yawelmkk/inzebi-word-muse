@@ -79,7 +79,6 @@ const App = () => {
                 <Suspense fallback={<RouteLoading />}>
                   <Routes>
                     <Route path="/" element={<Index />} />
-                    <Route path="/splash" element={<SplashScreen onComplete={() => {}} duration={999999} />} />
                     <Route path="/auth" element={<Auth />} />
                     <Route path="/word/:id" element={<WordDetail />} />
                     <Route path="/quiz" element={<Quiz />} />
