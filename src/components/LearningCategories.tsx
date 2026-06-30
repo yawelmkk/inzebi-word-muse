@@ -244,17 +244,19 @@ export const LearningCategories = () => {
 
       {/* Dialog : Répertoire des Noms */}
       <Dialog open={namesOpen} onOpenChange={setNamesOpen}>
-        <DialogContent className="sm:max-w-3xl max-h-[85vh] overflow-y-auto">
-          <DialogHeader>
-            <DialogTitle className="flex items-center gap-2">
-              <BadgeCheck className="w-5 h-5 text-primary" />
-              Le Répertoire des Noms
+        <DialogContent
+          className="p-0 gap-0 max-w-full w-screen h-[100dvh] max-h-[100dvh] rounded-none border-0 translate-x-[-50%] translate-y-[-50%] sm:max-w-3xl sm:w-full sm:h-auto sm:max-h-[85vh] sm:rounded-lg sm:border flex flex-col"
+        >
+          <DialogHeader className="px-4 pt-4 pb-3 sm:px-6 sm:pt-6 border-b shrink-0 text-left">
+            <DialogTitle className="flex items-center gap-2 pr-8">
+              <BadgeCheck className="w-5 h-5 text-primary shrink-0" />
+              <span className="truncate">Le Répertoire des Noms</span>
             </DialogTitle>
-            <DialogDescription>
+            <DialogDescription className="text-xs sm:text-sm">
               Découvrez les prénoms et noms nzébi, leur signification et leur contexte culturel.
             </DialogDescription>
           </DialogHeader>
-          <div className="mt-2">
+          <div className="flex-1 overflow-y-auto overscroll-contain px-4 py-3 sm:px-6 sm:py-4">
             <NamesDirectory />
           </div>
         </DialogContent>
