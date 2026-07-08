@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { Plus, Search, Trash2, User2, X } from "lucide-react";
+import { Pencil, Plus, Search, Trash2, User2, X } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -51,20 +51,25 @@ const genderLabel = (g?: string | null) => {
   return null;
 };
 
+type FormState = {
+  name: string;
+  gender: "" | Gender;
+  meaning: string;
+  context: string;
+};
+
+const emptyForm: FormState = { name: "", gender: "", meaning: "", context: "" };
+
 export const NamesDirectory = () => {
   const { isAdmin } = useIsAdmin();
   const [query, setQuery] = useState("");
   const [names, setNames] = useState<NameRow[]>([]);
   const [loading, setLoading] = useState(true);
 
-  // Add dialog
-  const [addOpen, setAddOpen] = useState(false);
-  const [form, setForm] = useState({
-    name: "",
-    gender: "" as "" | Gender,
-    meaning: "",
-    context: "",
-  });
+  // Add/Edit dialog
+  const [dialogOpen, setDialogOpen] = useState(false);
+  const [editing, setEditing] = useState<NameRow | null>(null);
+  const [form, setForm] = useState<FormState>(emptyForm);
   const [saving, setSaving] = useState(false);
 
   // Delete
@@ -93,11 +98,14 @@ export const NamesDirectory = () => {
     const filtered = names
       .filter((n) => {
         if (!q) return true;
-        return (
-          n.name.toLowerCase().includes(q) ||
-          (n.meaning?.toLowerCase().includes(q) ?? false) ||
-          (n.context?.toLowerCase().includes(q) ?? false)
-        );
+        if (isAdmin) {
+          return (
+            n.name.toLowerCase().includes(q) ||
+            (n.meaning?.toLowerCase().includes(q) ?? false) ||
+            (n.context?.toLowerCase().includes(q) ?? false)
+          );
+        }
+        return n.name.toLowerCase().includes(q);
       })
       .sort((a, b) => a.name.localeCompare(b.name, "fr"));
 
@@ -108,36 +116,54 @@ export const NamesDirectory = () => {
       map.get(letter)!.push(n);
     }
     return Array.from(map.entries()).sort(([a], [b]) => a.localeCompare(b, "fr"));
-  }, [query, names]);
+  }, [query, names, isAdmin]);
 
   const total = useMemo(
     () => grouped.reduce((acc, [, list]) => acc + list.length, 0),
     [grouped]
   );
 
-  const resetForm = () =>
-    setForm({ name: "", gender: "", meaning: "", context: "" });
+  const openAdd = () => {
+    setEditing(null);
+    setForm(emptyForm);
+    setDialogOpen(true);
+  };
 
-  const handleAdd = async () => {
+  const openEdit = (n: NameRow) => {
+    setEditing(n);
+    setForm({
+      name: n.name,
+      gender: (n.gender ?? "") as "" | Gender,
+      meaning: n.meaning ?? "",
+      context: n.context ?? "",
+    });
+    setDialogOpen(true);
+  };
+
+  const handleSave = async () => {
     if (!form.name.trim()) {
       toast({ title: "Le nom est requis", variant: "destructive" });
       return;
     }
     setSaving(true);
-    const { error } = await supabase.from("nzebi_names").insert({
+    const payload = {
       name: form.name.trim(),
       gender: form.gender || null,
       meaning: form.meaning.trim() || null,
       context: form.context.trim() || null,
-    });
+    };
+    const { error } = editing
+      ? await supabase.from("nzebi_names").update(payload).eq("id", editing.id)
+      : await supabase.from("nzebi_names").insert(payload);
     setSaving(false);
     if (error) {
       toast({ title: "Erreur", description: error.message, variant: "destructive" });
       return;
     }
-    toast({ title: "Nom ajouté" });
-    resetForm();
-    setAddOpen(false);
+    toast({ title: editing ? "Nom modifié" : "Nom ajouté" });
+    setDialogOpen(false);
+    setEditing(null);
+    setForm(emptyForm);
     fetchNames();
   };
 
@@ -162,7 +188,7 @@ export const NamesDirectory = () => {
           <Input
             value={query}
             onChange={(e) => setQuery(e.target.value)}
-            placeholder="Rechercher un nom, une signification…"
+            placeholder={isAdmin ? "Rechercher un nom, une signification…" : "Rechercher un nom…"}
             className="pl-9 pr-9 h-11 rounded-xl"
           />
           {query && (
@@ -180,16 +206,25 @@ export const NamesDirectory = () => {
         </div>
 
         {isAdmin && (
-          <Dialog open={addOpen} onOpenChange={(o) => { setAddOpen(o); if (!o) resetForm(); }}>
+          <Dialog
+            open={dialogOpen}
+            onOpenChange={(o) => {
+              setDialogOpen(o);
+              if (!o) {
+                setEditing(null);
+                setForm(emptyForm);
+              }
+            }}
+          >
             <DialogTrigger asChild>
-              <Button className="h-11 rounded-xl gap-1">
+              <Button className="h-11 rounded-xl gap-1" onClick={openAdd}>
                 <Plus className="h-4 w-4" />
                 <span className="hidden sm:inline">Ajouter</span>
               </Button>
             </DialogTrigger>
             <DialogContent>
               <DialogHeader>
-                <DialogTitle>Ajouter un nom</DialogTitle>
+                <DialogTitle>{editing ? "Modifier le nom" : "Ajouter un nom"}</DialogTitle>
               </DialogHeader>
               <div className="space-y-3">
                 <div className="space-y-1.5">
@@ -238,9 +273,9 @@ export const NamesDirectory = () => {
                 </div>
               </div>
               <DialogFooter>
-                <Button variant="ghost" onClick={() => setAddOpen(false)}>Annuler</Button>
-                <Button onClick={handleAdd} disabled={saving}>
-                  {saving ? "Enregistrement…" : "Ajouter"}
+                <Button variant="ghost" onClick={() => setDialogOpen(false)}>Annuler</Button>
+                <Button onClick={handleSave} disabled={saving}>
+                  {saving ? "Enregistrement…" : editing ? "Enregistrer" : "Ajouter"}
                 </Button>
               </DialogFooter>
             </DialogContent>
@@ -252,7 +287,6 @@ export const NamesDirectory = () => {
         <span>
           {loading ? "Chargement…" : `${total} nom${total > 1 ? "s" : ""} trouvé${total > 1 ? "s" : ""}`}
         </span>
-        <span className="hidden sm:inline">Cliquez pour voir le contexte</span>
       </div>
 
       {/* Alphabet quick nav */}
@@ -303,35 +337,50 @@ export const NamesDirectory = () => {
                         <div className="flex-1 min-w-0">
                           <div className="flex items-center gap-2 flex-wrap">
                             <h4 className="font-semibold text-foreground">{n.name}</h4>
-                            {gLabel && (
+                            {isAdmin && gLabel && (
                               <Badge variant="secondary" className="text-[10px] py-0 h-4">
                                 {gLabel}
                               </Badge>
                             )}
                           </div>
-                          {n.meaning ? (
-                            <p className="text-sm text-foreground/80 mt-0.5">{n.meaning}</p>
-                          ) : (
-                            <p className="text-xs text-muted-foreground italic mt-0.5">
-                              Signification à compléter
-                            </p>
-                          )}
-                          {n.context && (
-                            <p className="text-xs text-muted-foreground mt-1 line-clamp-2">
-                              {n.context}
-                            </p>
+                          {isAdmin && (
+                            <>
+                              {n.meaning ? (
+                                <p className="text-sm text-foreground/80 mt-0.5">{n.meaning}</p>
+                              ) : (
+                                <p className="text-xs text-muted-foreground italic mt-0.5">
+                                  Signification à compléter
+                                </p>
+                              )}
+                              {n.context && (
+                                <p className="text-xs text-muted-foreground mt-1 line-clamp-2">
+                                  {n.context}
+                                </p>
+                              )}
+                            </>
                           )}
                         </div>
                         {isAdmin && (
-                          <Button
-                            variant="ghost"
-                            size="icon"
-                            className="h-7 w-7 text-muted-foreground hover:text-destructive opacity-0 group-hover:opacity-100 transition-opacity"
-                            onClick={() => setToDelete(n)}
-                            aria-label={`Supprimer ${n.name}`}
-                          >
-                            <Trash2 className="h-3.5 w-3.5" />
-                          </Button>
+                          <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                            <Button
+                              variant="ghost"
+                              size="icon"
+                              className="h-7 w-7 text-muted-foreground hover:text-primary"
+                              onClick={() => openEdit(n)}
+                              aria-label={`Modifier ${n.name}`}
+                            >
+                              <Pencil className="h-3.5 w-3.5" />
+                            </Button>
+                            <Button
+                              variant="ghost"
+                              size="icon"
+                              className="h-7 w-7 text-muted-foreground hover:text-destructive"
+                              onClick={() => setToDelete(n)}
+                              aria-label={`Supprimer ${n.name}`}
+                            >
+                              <Trash2 className="h-3.5 w-3.5" />
+                            </Button>
+                          </div>
                         )}
                       </div>
                     </li>
