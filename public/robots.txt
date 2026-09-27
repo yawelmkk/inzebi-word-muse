@@ -13,4 +13,4 @@ Allow: /
 User-agent: *
 Allow: /
 
-Sitemap: https://yawelmkk.github.io/inzebi-word-muse/sitemap.xml
+Sitemap: https://inzebi-word-muse.vercel.app/sitemap.xml
